@@ -7,6 +7,7 @@
 #include <QPixmap>
 #include <QBitArray>
 #include <QtMath>
+#include "dicomimage.h"
 class DicomReader
 {
 public:
@@ -16,6 +17,9 @@ public:
     QByteArray LireRow(QByteArray::iterator* i,int rows);
     QByteArray reverse(QByteArray* a);
     void LireItemSuivantSQ(QByteArray::iterator*i);
+private:
+    dicomImage m_dcmimg;
+    bool m_fini;
 };
 
 #endif // DICOMREADER_H
