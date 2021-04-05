@@ -1,16 +1,16 @@
 #include "fenetre.h"
 
 Fenetre::Fenetre(){
-    //m_imgD = new ImageDisplayer(this);
+    m_imgD = new ImageDisplayer(this);
     this->setFixedSize(512,512);
+    dicomImage a = m_dcm.parseDicom("C:/1-110.dcm");
+    a.generateImage();
+    m_imgD->linkImage(a.getImage());
     update();
 }
 
 Fenetre::~Fenetre()
 {
 }
-void Fenetre::paintEvent(QPaintEvent *event){
-    QPainter painter(this);
-    painter.drawImage(this->rect(),m_dcm.m_image);
-}
+
 

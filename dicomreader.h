@@ -7,11 +7,14 @@
 #include <QPixmap>
 #include <QBitArray>
 #include <QtMath>
+#include "dicomimage.h"
 class DicomReader
 {
 public:
-    QImage m_image;
     DicomReader();
+    dicomImage parseDicom(QString chemin);
+private:
+    dicomImage m_dcmimg;
     void LireTagSuivant(QByteArray::iterator* i,bool tagR);
     QByteArray LireRow(QByteArray::iterator* i,int rows);
     QByteArray reverse(QByteArray* a);

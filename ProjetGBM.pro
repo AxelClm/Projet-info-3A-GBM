@@ -11,6 +11,7 @@ CONFIG += c++11
 SOURCES += \
     dicomimage.cpp \
     dicomreader.cpp \
+    dicomrow.cpp \
     imagedisplayer.cpp \
     main.cpp \
     fenetre.cpp
@@ -18,6 +19,7 @@ SOURCES += \
 HEADERS += \
     dicomimage.h \
     dicomreader.h \
+    dicomrow.h \
     fenetre.h \
     imagedisplayer.h
 
