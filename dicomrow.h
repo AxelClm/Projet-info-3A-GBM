@@ -7,6 +7,10 @@ class DicomRow
 {
 public:
     DicomRow(QByteArray Tag,QByteArray VR,QByteArray data,QByteArray size);
+    QByteArray getTag();
+    QByteArray getVR();
+    QByteArray getData();
+    QByteArray getSize();
 private:
     QByteArray m_Tag;
     QByteArray m_VR;

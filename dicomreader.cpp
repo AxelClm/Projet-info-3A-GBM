@@ -2,8 +2,11 @@
 
 DicomReader::DicomReader()
 {
-    m_fini = false;
-    QFile fichier("C:/1-110.dcm");
+
+}
+dicomImage DicomReader::parseDicom(QString chemin){
+    m_dcmimg = dicomImage();
+    QFile fichier(chemin);
     fichier.open(QIODevice::ReadOnly);
     QByteArray content = fichier.readAll();
     QByteArray::iterator i;
@@ -21,11 +24,8 @@ DicomReader::DicomReader()
     }
     while(i != content.end()){
         LireTagSuivant(&i,false);
-        //qDebug() << "----";
     }
-
-
-
+    return m_dcmimg;
 }
 void DicomReader::LireTagSuivant(QByteArray::iterator* i,bool tagR){
     QByteArray tag;
@@ -46,54 +46,6 @@ void DicomReader::LireTagSuivant(QByteArray::iterator* i,bool tagR){
         //qDebug() << nRow;
         QByteArray data = LireRow(i,nRow);
         m_dcmimg.ajouterRow(tag,vrName,data,size);
-        if(vrName == "OW"){
-            //qDebug() << "Afficher image";
-                int max = 0;
-                QByteArray::iterator z = data.begin();
-                qDebug() << data.length();
-                m_image = QImage(512,512,QImage::Format_Grayscale16);
-                qDebug("passer");
-                int bit = 16;
-                int bitA = 12;
-                for(int m=0;m<512;m++){
-                    for(int n=0;n<512;n++){
-                        QByteArray tmp = LireRow(&z,2);
-                        tmp = reverse(&tmp);
-                        QBitArray tmpBit(bit,false);
-                        for(int i = 0; i < tmp.count(); ++i) {
-                          if((i+1)*8 > bit){
-                              for(int b = 0; b < 8 - bit%8; b++) {
-                                tmpBit.setBit( i * 8 + b, tmp.at(i) & (1 << (7 - b)) );
-                              }
-                          }
-                          else{
-                              for(int b = 0; b < 8; b++) {
-                                tmpBit.setBit( i * 8 + b, tmp.at(i) & (1 << (7 - b)) );
-                              }
-                          }
-                        }
-                        // On met maintenant les bits en Int
-                        int a = 0;
-                        for(int i =0 ; i < bitA ; i++){
-                            bool b = tmpBit.at(bit-i-1);
-
-                            if(b == true){
-                                a = a + qPow(2,i);
-                            }
-                        }
-                        QColor color;
-                        if(a > max){
-                            max = a;
-                        }
-                        int intensite = 255*a/qPow(2,bitA);
-                        color.setBlue(intensite);
-                        color.setRed(intensite);
-                        color.setGreen(intensite);
-                        m_image.setPixelColor(n,m,color);
-                    }
-                }
-                qDebug() << max;
-            }
 
      }
      else if (vrName == "SQ"){
