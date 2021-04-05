@@ -15,35 +15,39 @@ void dicomImage::ajouterRow(QByteArray Tag, QByteArray VR, QByteArray data, QByt
     DicomRow a = DicomRow(Tag,VR,data,size);
     m_header.append(a);
     if (Tag.toHex() == "e07f1000"){
-        qDebug() << "imagePix";
         m_Indeximage = m_header.size()-1; // On part du principe que le programme n'aura jamais de threads...
     }
     else if (Tag.toHex() == "28000001"){
         bool ok;
         m_BitAllocated = data.toHex().toInt(&ok,16);
+        qDebug() << "m_BitAllocated :" << m_BitAllocated;
     }
     else if (Tag.toHex() == "28000101"){
         bool ok;
         m_BitStored = data.toHex().toInt(&ok,16);
+        qDebug() << "m_BitStored :" << m_BitStored;
     }
     else if (Tag.toHex() == "28001000"){
         bool ok;
         m_Row = data.toHex().toInt(&ok,16);
+        qDebug() << "m_Row :" <<m_Row ;
     }
     else if (Tag.toHex() == "28001100"){
         bool ok;
         m_Columns = data.toHex().toInt(&ok,16);
+        qDebug() << "m_Row :" <<m_Row ;
     }
 }
 bool dicomImage::generateImage(){
     if(m_BitAllocated == -1 || m_BitStored == -1 || m_Indeximage ==-1 || m_Row == -1 || m_Columns == -1){
         return false;
     }
+    int max = 0;
     QByteArray data = m_header[m_Indeximage].getData();
     QByteArray::iterator z = data.begin();
-    m_image = QImage(512,512,QImage::Format_Grayscale16);
-    for(int m=0;m<512;m++){
-        for(int n=0;n<512;n++){
+    m_image = QImage(m_Row,m_Columns,QImage::Format_Grayscale16);
+    for(int m=0;m<m_Columns;m++){
+        for(int n=0;n<m_Row;n++){
             QByteArray tmp = LireRow(&z,2);
             tmp = reverse(&tmp);
             QBitArray tmpBit(m_BitAllocated,false);
@@ -69,6 +73,9 @@ bool dicomImage::generateImage(){
                 }
             }
             QColor color;
+            if(a>max){
+                max = a;
+            }
             int intensite = 255*a/qPow(2,m_BitStored);
             color.setBlue(intensite);
             color.setRed(intensite);
@@ -76,6 +83,7 @@ bool dicomImage::generateImage(){
             m_image.setPixelColor(n,m,color);
         }
     }
+    qDebug() << "Max Image : " << max;
     return true;
 }
 QByteArray dicomImage::LireRow(QByteArray::iterator* i , int rows){
