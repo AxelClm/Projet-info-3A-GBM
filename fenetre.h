@@ -38,6 +38,7 @@ private:
     QPushButton* m_ajoutSerie;
     QPushButton* m_fusionSerie;
     serieDisplayer* m_sd;
+    SerieFusion* m_fusion;
     void resizeEvent(QResizeEvent* event);
 public:
     Fenetre();

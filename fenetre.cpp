@@ -27,6 +27,7 @@ Fenetre::Fenetre(){
     m_HBMidLayout->addWidget(m_sDM);
     m_sDM2 = new serieDisplayer(this);
     m_HBMidLayout->addWidget(m_sDM2);
+    m_fusion = new SerieFusion();
     //Creation menu gauche
     this->setGeometry(0,0,900,600);
     QSize NSize = QSize(850,600);
@@ -76,11 +77,12 @@ void Fenetre::ajouterSerie(){
         QObject::connect(m_sd,SIGNAL(toucher(Series*)),this,SLOT(afficherSerie(Series*)));
 }
 void Fenetre::afficherSerie(Series* sr){
+    m_fusion->ajouter(sr);
     if(m_sDM->isEmpty()){
         m_sDM->linkSerie(sr);
     }
     else if(m_sDM2->isEmpty()){
-        m_sDM2->linkSerie(sr);
+        m_sDM2->linkSerie(m_fusion);
     }
 
 }
