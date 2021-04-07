@@ -4,15 +4,17 @@
 #include <QWidget>
 #include <QImage>
 #include <QPainter>
+#include <QtDebug>
 class ImageDisplayer : public QWidget
 {
     Q_OBJECT
 public:
     ImageDisplayer(QWidget *parent);
-    void linkImage(QImage image);
+    void linkImage(QImage* image);
+    void changerS(int width);
 
 private:
-    QImage m_image;
+    QImage* m_image;
 protected:
     void paintEvent(QPaintEvent *event) override;
 

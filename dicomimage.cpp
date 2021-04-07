@@ -20,22 +20,22 @@ void dicomImage::ajouterRow(QByteArray Tag, QByteArray VR, QByteArray data, QByt
     else if (Tag.toHex() == "28000001"){
         bool ok;
         m_BitAllocated = data.toHex().toInt(&ok,16);
-        qDebug() << "m_BitAllocated :" << m_BitAllocated;
+        //qDebug() << "m_BitAllocated :" << m_BitAllocated;
     }
     else if (Tag.toHex() == "28000101"){
         bool ok;
         m_BitStored = data.toHex().toInt(&ok,16);
-        qDebug() << "m_BitStored :" << m_BitStored;
+        //qDebug() << "m_BitStored :" << m_BitStored;
     }
     else if (Tag.toHex() == "28001000"){
         bool ok;
         m_Row = data.toHex().toInt(&ok,16);
-        qDebug() << "m_Row :" <<m_Row ;
+        //qDebug() << "m_Row :" <<m_Row ;
     }
     else if (Tag.toHex() == "28001100"){
         bool ok;
         m_Columns = data.toHex().toInt(&ok,16);
-        qDebug() << "m_Row :" <<m_Row ;
+        //qDebug() << "m_Row :" <<m_Row ;
     }
 }
 bool dicomImage::generateImage(){
@@ -45,7 +45,7 @@ bool dicomImage::generateImage(){
     int max = 0;
     QByteArray data = m_header[m_Indeximage].getData();
     QByteArray::iterator z = data.begin();
-    m_image = QImage(m_Row,m_Columns,QImage::Format_Grayscale16);
+    m_image = new QImage(m_Row,m_Columns,QImage::Format_Grayscale16);
     for(int m=0;m<m_Columns;m++){
         for(int n=0;n<m_Row;n++){
             QByteArray tmp = LireRow(&z,2);
@@ -80,7 +80,7 @@ bool dicomImage::generateImage(){
             color.setBlue(intensite);
             color.setRed(intensite);
             color.setGreen(intensite);
-            m_image.setPixelColor(n,m,color);
+            m_image->setPixelColor(n,m,color);
         }
     }
     qDebug() << "Max Image : " << max;
@@ -104,6 +104,6 @@ QByteArray dicomImage::reverse(QByteArray *a){
     }
     return res;
 }
-QImage dicomImage::getImage(){
+QImage* dicomImage::getImage(){
     return m_image;
 }
