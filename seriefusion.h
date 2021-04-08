@@ -11,6 +11,11 @@ public:
     QImage* getFirst() override;
 private:
     QImage* fusion(QImage* a, QImage* b);
+    QVector<QImage*> rescale(QImage*a,QImage*b);
+    QImage* removeX(QImage*a,int nbrX);
+    QImage* removeY(QImage*a,int nbrY);
+    QImage* removeXL(QImage*a,int nbrX);
+    QImage* removeYL(QImage*a,int nbrY);
     Series*m_s1;
     Series* m_s2;
 
