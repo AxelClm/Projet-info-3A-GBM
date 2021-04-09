@@ -19,3 +19,8 @@ bool serieDisplayer::isEmpty(){
         return false;
     }
 }
+void serieDisplayer::generateImages(){
+    if(m_sr !=NULL){
+        m_sr->InitialisationImages();
+    }
+}

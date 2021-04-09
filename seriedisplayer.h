@@ -12,6 +12,7 @@ public:
     explicit serieDisplayer(QWidget *parent = nullptr);
     void linkSerie(Series *);
     bool isEmpty();
+    void generateImages();
 private:
     Series* m_sr;
 protected:

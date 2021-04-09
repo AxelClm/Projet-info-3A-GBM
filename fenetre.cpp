@@ -77,12 +77,14 @@ void Fenetre::ajouterSerie(){
         QObject::connect(m_sd,SIGNAL(toucher(Series*)),this,SLOT(afficherSerie(Series*)));
 }
 void Fenetre::afficherSerie(Series* sr){
-    m_fusion->ajouter(sr);
+    //m_fusion->ajouter(sr);
     if(m_sDM->isEmpty()){
         m_sDM->linkSerie(sr);
+        m_sDM->generateImages();
     }
     else if(m_sDM2->isEmpty()){
-        m_sDM2->linkSerie(m_fusion);
+        m_sDM2->linkSerie(sr);
+        m_sDM2->generateImages();
     }
 
 }

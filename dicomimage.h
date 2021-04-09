@@ -6,6 +6,8 @@
 #include <QVector>
 #include <QImage>
 #include <QtMath>
+#include <iostream>
+#include "iostream"
 class dicomImage
 {
 public:

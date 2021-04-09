@@ -43,7 +43,7 @@ bool dicomImage::generateImage(){
         return false;
     }
     int max = 0;
-    QByteArray data = m_header[m_Indeximage].getData();
+    QByteArray data = m_header[m_Indeximage].getData(); 
     QByteArray::iterator z = data.begin();
     m_image = new QImage(m_Row,m_Columns,QImage::Format_Grayscale16);
     for(int m=0;m<m_Columns;m++){
@@ -83,7 +83,7 @@ bool dicomImage::generateImage(){
             m_image->setPixelColor(n,m,color);
         }
     }
-    qDebug() << "Max Image : " << max;
+    //qDebug() << "Max Image : " << max;
     return true;
 }
 QByteArray dicomImage::LireRow(QByteArray::iterator* i , int rows){
@@ -99,7 +99,7 @@ QByteArray dicomImage::reverse(QByteArray *a){
     QByteArray::reverse_iterator i;
     i = a->rbegin();
     while(i != a->rend()){
-        res = res + *i;
+        res.append(*i);
         i++;
     }
     return res;
