@@ -63,40 +63,26 @@ bool dicomImage::generateImage(){
     if(m_BitAllocated == -1 || m_BitStored == -1 || m_Indeximage ==-1 || m_Row == -1 || m_Columns == -1){
         return false;
     }
-    int max = 0;
     QByteArray data = m_header[m_Indeximage].getData(); 
-    QByteArray::iterator z = data.begin();
     m_image = new QImage(m_Row,m_Columns,QImage::Format_Grayscale16);
+    int a = 0;
+    QBitArray tmpBit(m_BitAllocated,false);
     for(int m=0;m<m_Columns;m++){
         for(int n=0;n<m_Row;n++){
-            QByteArray tmp = LireRow(&z,2);
-            tmp = reverse(&tmp);
-            QBitArray tmpBit(m_BitAllocated,false);
-            for(int i = 0; i < tmp.count(); ++i) {
-              if((i+1)*8 > m_BitAllocated){
-                  for(int b = 0; b < 8 - m_BitAllocated%8; b++) {
-                    tmpBit.setBit( i * 8 + b, tmp.at(i) & (1 << (7 - b)) );
-                  }
-              }
-              else{
+            for(int i = 0; i < 2; i++) {
                   for(int b = 0; b < 8; b++) {
-                    tmpBit.setBit( i * 8 + b, tmp.at(i) & (1 << (7 - b)) );
+                    tmpBit.setBit( i * 8 + b, data.at((1-i)+n*2+m_Row*m*2) & (1 << (7 - b)) );
                   }
-              }
             }
             // On met maintenant les bits en Int
-            int a = 0;
+            a=0;
             for(int i =0 ; i < m_BitStored ; i++){
-                bool b = tmpBit.at(m_BitAllocated-i-1);
-
-                if(b == true){
+                if(tmpBit.at(m_BitAllocated-i-1)==true){
                     a = a + qPow(2,i);
                 }
             }
             QColor color;
-            if(a>max){
-                max = a;
-            }
+
             int intensite = 255*a/qPow(2,m_BitStored);
             int bruit = 30;
             double coef = 255/(255-30);
