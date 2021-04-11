@@ -19,7 +19,8 @@ SOURCES += \
     seriedisplayer.cpp \
     seriefusion.cpp \
     series.cpp \
-    synchro.cpp
+    synchro.cpp \
+    viewcontroler.cpp
 
 HEADERS += \
     dicomimage.h \
@@ -31,7 +32,8 @@ HEADERS += \
     seriedisplayer.h \
     seriefusion.h \
     series.h \
-    synchro.h
+    synchro.h \
+    viewcontroler.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

@@ -29,10 +29,8 @@ Fenetre::Fenetre(){
     m_HBMidLayout->setAlignment(Qt::AlignCenter);
     m_GD->addLayout(m_HBMidLayout);
     //Creation menu droit
-    m_FrameD = new QFrame(this);
-    m_VBDroiteLayout->addWidget(m_FrameD);
-    m_slider = new QSlider(Qt::Horizontal,m_FrameD);
-    m_VBDroiteLayout->addWidget(m_slider);
+    m_tab = new ViewControler(this);
+    m_VBDroiteLayout->addWidget(m_tab);
     m_VBDroiteLayout->setAlignment(Qt::AlignTop);
     this->setGeometry(0,0,900,600);
     QSize NSize = QSize(850,600);
@@ -41,6 +39,7 @@ Fenetre::Fenetre(){
     QCoreApplication::postEvent(this,ev);
     QObject::connect(m_ajoutSerie,SIGNAL(clicked()),this,SLOT(ajouterSerie()));
     QObject::connect(m_fusionSerie,SIGNAL(clicked()),m_GD,SLOT(fusionnerSerie()));
+    QObject::connect(m_GD,SIGNAL(loadSerie(serieDisplayer*,int)),m_tab,SLOT(linkSerieDisplayer(serieDisplayer*,int)));
 }
 
 Fenetre::~Fenetre()
@@ -58,7 +57,7 @@ void Fenetre::resizeEvent(QResizeEvent* event){
     int taille = (event->size().width()-m_GWidth-200);
     //qDebug() << mGWidth;
     m_FrameG->setFixedWidth(m_GWidth);
-    m_FrameD->setFixedWidth(m_GWidth);
+    m_tab->setFixedWidth(m_GWidth);
     m_GD->setW(taille);
     if(m_sd != NULL){
         m_sd->changerS(m_GWidth);

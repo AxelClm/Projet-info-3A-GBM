@@ -20,6 +20,8 @@ private:
 public slots:
     void afficherSerie(Series* sr);
     void fusionnerSerie();
+signals:
+    void loadSerie(serieDisplayer*,int);
 };
 
 #endif // GROUPDISPLAYER_H

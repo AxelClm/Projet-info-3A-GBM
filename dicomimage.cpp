@@ -40,7 +40,7 @@ void dicomImage::ajouterRow(QByteArray Tag, QByteArray VR, QByteArray data, QByt
     else if (Tag.toHex() == "20004110"){
         bool ok;
         m_sliceL = reverse(&data).toDouble(&ok);
-        qDebug() << m_sliceL;
+        //qDebug() << m_sliceL;
     }
 }
 bool dicomImage::generateImage(){

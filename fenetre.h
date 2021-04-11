@@ -23,11 +23,13 @@
 #include "seriedisplayer.h"
 #include "seriefusion.h"
 #include "groupdisplayer.h"
+#include "viewcontroler.h"
 class Fenetre : public QWidget
 {
     Q_OBJECT
 private:
     DicomReader m_dcm;
+    ViewControler* m_tab;
     //serieDisplayer* m_sD2;
     QFrame* m_FrameG;
     QFrame* m_FrameD;

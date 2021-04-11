@@ -228,16 +228,19 @@ QImage* SerieFusion::removeXL(QImage* a, int nbrX){
 void SerieFusion::InitialisationImages(){
     int t =1;
     synchro synch(m_s1,m_s2);
-    qDebug()<< synch.getMax();
-    QProgressDialog progress("Fusion des Images","Annuler",0,m_s1->getMax(),m_parent);
+    //qDebug()<< synch.getMax();
+    QProgressDialog progress("Fusion des Images","Annuler",0,synch.getMax(),m_parent);
     progress.setWindowModality(Qt::WindowModal);
     progress.setMinimumDuration(0);
-    for(int i=0;i<m_s1->getMax();i++){
-       QVector<QImage*> res = rescale(m_s1->getIndex(i),m_s2->getIndex(i));
+    for(int i=0;i<synch.getMax()-1;i++){
+       int* tab = synch.getIndex(i);
+       //qDebug() << tab[0] <<"/"<<m_s1->getMax()-1<< " " << tab[1] << "/"<<m_s2->getMax()-1;
+       QVector<QImage*> res = rescale(m_s1->getIndex(tab[0]),m_s2->getIndex(tab[1]));
        m_liste.append(fusion(res.at(0),res.at(1)));
        progress.setValue(t);
        t++;
     }
+    //qDebug() << "fini2";
 }
 QImage* SerieFusion::getIndex(int i){
     return m_liste.at(i);

@@ -9,7 +9,7 @@ void synchro::synchroniseSeries(Series* a,Series* b){
     int ia = 0;
     int ib = 0;
     while (true) {
-        if(ia == a->getMax()-1 || ib == b->getMax()-1){
+        if(ia >= a->getMax()-1 || ib >= b->getMax()-1){
             break;
         }
 
@@ -42,6 +42,7 @@ void synchro::synchroniseSeries(Series* a,Series* b){
             ia++;
         }
     }
+    qDebug() << "fini";
 }
 int synchro::getMax(){
     return m_liste.size();

@@ -11,14 +11,12 @@ void GroupDisplayer::afficherSerie(Series* sr){
     if(m_s1->isEmpty()){
         m_s1->linkSerie(sr);
         m_s1->generateImages();
-        /*
-        m_slider->setMaximum(sr->getMax());
-        QObject::connect(m_slider,SIGNAL(valueChanged(int)),m_sDM,SLOT(changeImage(int)));
-        */
+        emit loadSerie(m_s1,0);
     }
     else if(m_s2->isEmpty()){
         m_s2->linkSerie(sr);
         m_s2->generateImages();
+        emit loadSerie(m_s2,1);
     }
 
 }
@@ -28,6 +26,7 @@ void GroupDisplayer::fusionnerSerie(){
     sF->ajouter(m_s2->getSerie());
     m_s1->linkSerie(sF);
     m_s1->generateImages();
+    emit loadSerie(m_s1,0);
 }
 void GroupDisplayer::addLayout(QHBoxLayout *layout){
     layout->addWidget(m_s1);
