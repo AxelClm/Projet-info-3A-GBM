@@ -15,6 +15,7 @@ public:
     void ajouterRow(QByteArray Tag, QByteArray VR,QByteArray data,QByteArray size);
     bool generateImage();
     QImage* getImage();
+    double getSliceL();
 private:
     QVector<DicomRow> m_header;
     QImage* m_image;
@@ -23,6 +24,7 @@ private:
     int m_BitAllocated;
     int m_BitStored;
     int m_Indeximage;
+    double m_sliceL;
     QByteArray LireRow(QByteArray::iterator* i,int rows);
     QByteArray reverse(QByteArray* a);
 

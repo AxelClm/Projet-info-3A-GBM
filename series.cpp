@@ -19,6 +19,7 @@ void Series::InitialisationImages(){
     int i =1;
     QProgressDialog progress("Generation des Images","Annuler",0,getMax(),m_parent);
     progress.setWindowModality(Qt::WindowModal);
+    progress.setMinimumDuration(0);
     QVector<dicomImage*>::iterator it;
     for(it = m_liste.begin();it<m_liste.end();it++){
         //It.hasNext() ne marche pas (boucle while) ???
@@ -30,13 +31,17 @@ void Series::InitialisationImages(){
     m_generated = true;
 
 }
-QImage* Series::getIndex(int i){
+QImage *Series::getIndex(int i){
     if(m_generated == true){
         return m_liste.at(i)->getImage();
     }
-
+    else{
+        return NULL;
+    }
 }
 int Series::getMax(){
     return m_liste.size();
 }
-
+dicomImage* Series::getIdI(int i){
+    return m_liste.at(i);
+}

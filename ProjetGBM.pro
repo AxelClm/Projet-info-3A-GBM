@@ -18,7 +18,8 @@ SOURCES += \
     fenetre.cpp \
     seriedisplayer.cpp \
     seriefusion.cpp \
-    series.cpp
+    series.cpp \
+    synchro.cpp
 
 HEADERS += \
     dicomimage.h \
@@ -29,7 +30,8 @@ HEADERS += \
     imagedisplayer.h \
     seriedisplayer.h \
     seriefusion.h \
-    series.h
+    series.h \
+    synchro.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

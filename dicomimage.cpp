@@ -37,6 +37,11 @@ void dicomImage::ajouterRow(QByteArray Tag, QByteArray VR, QByteArray data, QByt
         m_Columns = data.toHex().toInt(&ok,16);
         //qDebug() << "m_Row :" <<m_Row ;
     }
+    else if (Tag.toHex() == "20004110"){
+        bool ok;
+        m_sliceL = reverse(&data).toDouble(&ok);
+        qDebug() << m_sliceL;
+    }
 }
 bool dicomImage::generateImage(){
     if(m_BitAllocated == -1 || m_BitStored == -1 || m_Indeximage ==-1 || m_Row == -1 || m_Columns == -1){
@@ -106,4 +111,7 @@ QByteArray dicomImage::reverse(QByteArray *a){
 }
 QImage* dicomImage::getImage(){
     return m_image;
+}
+double dicomImage::getSliceL(){
+    return m_sliceL;
 }

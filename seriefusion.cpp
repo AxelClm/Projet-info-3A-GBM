@@ -89,7 +89,7 @@ QVector<QImage*> SerieFusion::rescale(QImage*a,QImage*b){
 
     qreal distx = qFabs(xa)-qFabs(xb);
     qreal disty = qFabs(ya)-qFabs(yb);
-    qDebug()<<distx <<" "<<disty;
+    //qDebug()<<distx <<" "<<disty;
     if(distx<0){//a est donc plus eloigné
         int nbrPix = qFabs(distx/xas);
         a = removeX(a,nbrPix);
@@ -114,10 +114,10 @@ QVector<QImage*> SerieFusion::rescale(QImage*a,QImage*b){
     //Il faut maintenant qu'elles s'arretent au même endroit
     distx = (a->width()*xas) - (b->width()*xbs);
     disty = (a->height()*yas) - (b->height()*ybs);
-    qDebug() << distx <<" " <<disty;
+    //qDebug() << distx <<" " <<disty;
     if(distx < 0){ //b est alors plus grands.
         int nbrPix = qFabs(distx)/xbs;
-        qDebug() <<"b"<<nbrPix;
+        //qDebug() <<"b"<<nbrPix;
         QImage* tmp = removeXL(b,nbrPix);
         if(bchanged==true){
             delete b;
@@ -127,7 +127,7 @@ QVector<QImage*> SerieFusion::rescale(QImage*a,QImage*b){
     }
     else{
         int nbrPix = qFabs(distx)/xas;
-        qDebug() << nbrPix;
+        //qDebug() << nbrPix;
         QImage* tmp = removeXL(a,nbrPix);
         if(achanged==true){
             delete a;
@@ -137,7 +137,7 @@ QVector<QImage*> SerieFusion::rescale(QImage*a,QImage*b){
     }
     if(distx < 0){ //b est alors plus grands.
         int nbrPix = qFabs(disty)/ybs;
-        qDebug() <<"b"<<nbrPix;
+        //qDebug() <<"b"<<nbrPix;
         QImage* tmp = removeYL(b,nbrPix);
         if(bchanged==true){
             delete b;
@@ -147,7 +147,7 @@ QVector<QImage*> SerieFusion::rescale(QImage*a,QImage*b){
     }
     else{
         int nbrPix = qFabs(disty)/yas;
-        qDebug() << nbrPix;
+        //qDebug() << nbrPix;
         QImage* tmp = removeYL(a,nbrPix);
         if(achanged==true){
             delete a;
@@ -155,9 +155,9 @@ QVector<QImage*> SerieFusion::rescale(QImage*a,QImage*b){
         a = tmp;
         achanged =true;
     }
-    qDebug() << "taille";
-    qDebug() <<a->width() << " " << a->height();
-    qDebug() <<b->width() << " " << b->height();
+    //qDebug() << "taille";
+    //qDebug() <<a->width() << " " << a->height();
+    //qDebug() <<b->width() << " " << b->height();
     //On remet maintenant a et b a la meme taille;
     if(a->width() > b->width()){
         QImage* tmp = new QImage(b->scaled(a->width(),a->height(),Qt::IgnoreAspectRatio,Qt::SmoothTransformation));
@@ -173,9 +173,9 @@ QVector<QImage*> SerieFusion::rescale(QImage*a,QImage*b){
         }
         a = tmp;
     }
-    qDebug() << "taille f";
-    qDebug() <<a->width() << " " << a->height();
-    qDebug() <<b->width() << " " << b->height();
+    //qDebug() << "taille f";
+    //qDebug() <<a->width() << " " << a->height();
+    //qDebug() <<b->width() << " " << b->height();
     QVector<QImage*> res;
     res.append(a);
     res.append(b);
@@ -227,12 +227,16 @@ QImage* SerieFusion::removeXL(QImage* a, int nbrX){
 }
 void SerieFusion::InitialisationImages(){
     int t =1;
-    QProgressDialog progress("Generation des Images","Annuler",0,m_s1->getMax(),m_parent);
+    synchro synch(m_s1,m_s2);
+    qDebug()<< synch.getMax();
+    QProgressDialog progress("Fusion des Images","Annuler",0,m_s1->getMax(),m_parent);
     progress.setWindowModality(Qt::WindowModal);
+    progress.setMinimumDuration(0);
     for(int i=0;i<m_s1->getMax();i++){
        QVector<QImage*> res = rescale(m_s1->getIndex(i),m_s2->getIndex(i));
        m_liste.append(fusion(res.at(0),res.at(1)));
        progress.setValue(t);
+       t++;
     }
 }
 QImage* SerieFusion::getIndex(int i){

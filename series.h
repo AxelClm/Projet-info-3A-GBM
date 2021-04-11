@@ -12,6 +12,7 @@ public:
     virtual void InitialisationImages();
     //virtual void getCurrent();
     virtual QImage* getIndex(int i);
+    dicomImage* getIdI(int i);
     virtual int getMax();
 private:
     QWidget* m_parent;

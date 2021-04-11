@@ -2,6 +2,7 @@
 #define SERIEFUSION_H
 #include "series.h"
 #include <QColor>
+#include "synchro.h"
 class SerieFusion : public Series
 {
 public:
