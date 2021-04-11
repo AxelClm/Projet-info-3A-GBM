@@ -42,6 +42,22 @@ void dicomImage::ajouterRow(QByteArray Tag, QByteArray VR, QByteArray data, QByt
         m_sliceL = reverse(&data).toDouble(&ok);
         //qDebug() << m_sliceL;
     }
+    else if (Tag.toHex() == "20003200"){
+        QString dt = reverse(&data);
+        QStringList a = dt.split("\\");
+        m_x = a[0].toDouble();
+        m_y = a[1].toDouble();
+        //qDebug() <<"x =" <<m_x;
+        //qDebug() <<"y =" <<m_y;
+    }
+    else if (Tag.toHex() == "28003000"){
+        QString dt = reverse(&data);
+        QStringList a = dt.split("\\");
+        m_xPix = a[0].toDouble();
+        m_yPix = a[1].toDouble();
+        //qDebug() <<"xP =" <<m_xPix;
+        //qDebug() <<"yP =" <<m_yPix;
+    }
 }
 bool dicomImage::generateImage(){
     if(m_BitAllocated == -1 || m_BitStored == -1 || m_Indeximage ==-1 || m_Row == -1 || m_Columns == -1){
@@ -114,4 +130,16 @@ QImage* dicomImage::getImage(){
 }
 double dicomImage::getSliceL(){
     return m_sliceL;
+}
+double dicomImage::getX(){
+    return m_x;
+}
+double dicomImage::getY(){
+    return m_y;
+}
+double dicomImage::getXPix(){
+    return m_xPix;
+}
+double dicomImage::getYPix(){
+    return m_yPix;
 }

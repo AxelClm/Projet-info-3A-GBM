@@ -16,7 +16,11 @@ public:
     bool generateImage();
     QImage* getImage();
     double getSliceL();
-private:
+    double getX();
+    double getY();
+    double getXPix();
+    double getYPix();
+    private:
     QVector<DicomRow> m_header;
     QImage* m_image;
     int m_Row;
@@ -24,6 +28,10 @@ private:
     int m_BitAllocated;
     int m_BitStored;
     int m_Indeximage;
+    double m_x;
+    double m_y;
+    double m_xPix;
+    double m_yPix;
     double m_sliceL;
     QByteArray LireRow(QByteArray::iterator* i,int rows);
     QByteArray reverse(QByteArray* a);

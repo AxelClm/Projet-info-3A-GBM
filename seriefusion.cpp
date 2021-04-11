@@ -15,12 +15,11 @@ void SerieFusion::ajouter(Series* s){
     }
 }
 QImage* SerieFusion::getFirst(){
-    QImage* a = m_s1->getFirst();
-    QImage* b = m_s2->getFirst();
-    QVector<QImage*> res = rescale(a,b);
-    a = res.at(0);
-    b = res.at(1);
-    return fusion(a,b);
+    QVector<QImage*> res = rescale(m_s1->getIndex(0),m_s2->getIndex(0),m_s1->getIdI(0)->getX(),
+            m_s1->getIdI(0)->getY(),m_s1->getIdI(0)->getXPix(),m_s1->getIdI(0)->getYPix(),
+            m_s2->getIdI(0)->getX(),m_s2->getIdI(0)->getY(),m_s2->getIdI(0)->getXPix(),
+            m_s2->getIdI(0)->getYPix());
+    return fusion(res.at(0),res.at(1));
 }
 QImage* SerieFusion::fusion(QImage*a,QImage*b){
     double ratio = 0.5;
@@ -75,89 +74,81 @@ QImage* SerieFusion::fusion(QImage*a,QImage*b){
     return c;
 }
 
-QVector<QImage*> SerieFusion::rescale(QImage*a,QImage*b){
-    double xa =-249.51;
-    double ya =-418.51;
-    double xas = 0.976;
-    double yas = 0.976;
-    double xb = -342.13/2.23;
-    double yb = -509.6/1.6;
-    double xbs = 2.08;
-    double ybs = 2.08;
+QVector<QImage*> SerieFusion::rescale(QImage*a,QImage*b,double xa , double ya, double xas , double yas , double xb, double yb,double xbs, double ybs){
     bool achanged = false;
     bool bchanged = false;
 
     qreal distx = qFabs(xa)-qFabs(xb);
     qreal disty = qFabs(ya)-qFabs(yb);
-    //qDebug()<<distx <<" "<<disty;
-    if(distx<0){//a est donc plus eloigné
+
+    if(distx <0){
+        int nbrPix = qFabs(distx/xbs);
+        b = removeX(b,nbrPix);
+        bchanged = true;
+    }
+    else{
         int nbrPix = qFabs(distx/xas);
         a = removeX(a,nbrPix);
         achanged = true;
     }
-    else{
-        int nbrPix=qFabs(distx/xbs);
-        b = removeX(b,nbrPix);
-        bchanged =true;
+    if(disty < 0){
+        int nbrPix = qFabs(disty/ybs);
+        QImage* tmp = removeY(b,nbrPix);
+        if(bchanged == true){
+            delete b;
+        }
+        b = tmp;
+        bchanged = true;
     }
-    if(disty<0){//A est plus eloigné
+    else{
         int nbrPix = qFabs(disty/yas);
-        a= removeY(a,nbrPix);
+        QImage* tmp = removeY(a,nbrPix);
+        if(achanged == true){
+            delete a;
+        }
+        a = tmp;
         achanged = true;
     }
-    else{
-        int nbrPix = qFabs(disty/ybs);
-        b=removeY(b,nbrPix);
-        bchanged =true;
-    }
-    //On a donc les images au même 0.
-    //Il faut maintenant qu'elles s'arretent au même endroit
     distx = (a->width()*xas) - (b->width()*xbs);
     disty = (a->height()*yas) - (b->height()*ybs);
-    //qDebug() << distx <<" " <<disty;
-    if(distx < 0){ //b est alors plus grands.
-        int nbrPix = qFabs(distx)/xbs;
-        //qDebug() <<"b"<<nbrPix;
+    if(distx <0){
+        int nbrPix = qFabs(distx/xbs);
         QImage* tmp = removeXL(b,nbrPix);
-        if(bchanged==true){
+        if(bchanged == true){
             delete b;
         }
         b = tmp;
-        bchanged =true;
+        bchanged = true;
     }
     else{
-        int nbrPix = qFabs(distx)/xas;
-        //qDebug() << nbrPix;
-        QImage* tmp = removeXL(a,nbrPix);
-        if(achanged==true){
+        int nbrPix = qFabs(distx/xas);
+        QImage* tmp = removeX(a,nbrPix);
+        if(achanged == true){
             delete a;
         }
         a = tmp;
-        achanged =true;
+        achanged = true;
     }
-    if(distx < 0){ //b est alors plus grands.
-        int nbrPix = qFabs(disty)/ybs;
-        //qDebug() <<"b"<<nbrPix;
+    if(disty < 0){
+        int nbrPix = qFabs(disty/ybs);
         QImage* tmp = removeYL(b,nbrPix);
-        if(bchanged==true){
+        if(bchanged == true){
             delete b;
         }
         b = tmp;
-        bchanged =true;
+        bchanged = true;
     }
     else{
-        int nbrPix = qFabs(disty)/yas;
-        //qDebug() << nbrPix;
+        int nbrPix = qFabs(disty/yas);
         QImage* tmp = removeYL(a,nbrPix);
-        if(achanged==true){
+        if(achanged == true){
             delete a;
         }
         a = tmp;
-        achanged =true;
+        achanged = true;
     }
-    //qDebug() << "taille";
-    //qDebug() <<a->width() << " " << a->height();
-    //qDebug() <<b->width() << " " << b->height();
+
+
     //On remet maintenant a et b a la meme taille;
     if(a->width() > b->width()){
         QImage* tmp = new QImage(b->scaled(a->width(),a->height(),Qt::IgnoreAspectRatio,Qt::SmoothTransformation));
@@ -235,7 +226,10 @@ void SerieFusion::InitialisationImages(){
     for(int i=0;i<synch.getMax()-1;i++){
        int* tab = synch.getIndex(i);
        //qDebug() << tab[0] <<"/"<<m_s1->getMax()-1<< " " << tab[1] << "/"<<m_s2->getMax()-1;
-       QVector<QImage*> res = rescale(m_s1->getIndex(tab[0]),m_s2->getIndex(tab[1]));
+       QVector<QImage*> res = rescale(m_s1->getIndex(tab[0]),m_s2->getIndex(tab[1]),m_s1->getIdI(tab[0])->getX(),
+               m_s1->getIdI(tab[0])->getY(),m_s1->getIdI(tab[0])->getXPix(),m_s1->getIdI(tab[0])->getYPix(),
+               m_s2->getIdI(tab[1])->getX(),m_s2->getIdI(tab[1])->getY(),m_s2->getIdI(tab[1])->getXPix(),
+               m_s2->getIdI(tab[1])->getYPix());
        m_liste.append(fusion(res.at(0),res.at(1)));
        progress.setValue(t);
        t++;

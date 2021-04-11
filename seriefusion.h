@@ -17,7 +17,7 @@ private:
     QWidget* m_parent;
     QImage* fusion(QImage* a, QImage* b);
     QVector<QImage*> m_liste;
-    QVector<QImage*> rescale(QImage*a,QImage*b);
+    QVector<QImage*> rescale(QImage*a,QImage*b,double xa , double ya, double xas , double yas , double xb, double yb,double xbs, double ybs);
     QImage* removeX(QImage*a,int nbrX);
     QImage* removeY(QImage*a,int nbrY);
     QImage* removeXL(QImage*a,int nbrX);
