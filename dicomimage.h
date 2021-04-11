@@ -6,16 +6,18 @@
 #include <QVector>
 #include <QImage>
 #include <QtMath>
+#include <iostream>
+#include "iostream"
 class dicomImage
 {
 public:
     dicomImage();
     void ajouterRow(QByteArray Tag, QByteArray VR,QByteArray data,QByteArray size);
     bool generateImage();
-    QImage getImage();
+    QImage* getImage();
 private:
     QVector<DicomRow> m_header;
-    QImage m_image;
+    QImage* m_image;
     int m_Row;
     int m_Columns;
     int m_BitAllocated;

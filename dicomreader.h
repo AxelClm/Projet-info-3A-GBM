@@ -12,9 +12,9 @@ class DicomReader
 {
 public:
     DicomReader();
-    dicomImage parseDicom(QString chemin);
+    dicomImage* parseDicom(QString chemin);
 private:
-    dicomImage m_dcmimg;
+    dicomImage* m_dcmimg;
     void LireTagSuivant(QByteArray::iterator* i,bool tagR);
     QByteArray LireRow(QByteArray::iterator* i,int rows);
     QByteArray reverse(QByteArray* a);

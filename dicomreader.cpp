@@ -4,8 +4,8 @@ DicomReader::DicomReader()
 {
 
 }
-dicomImage DicomReader::parseDicom(QString chemin){
-    m_dcmimg = dicomImage();
+dicomImage* DicomReader::parseDicom(QString chemin){
+    m_dcmimg = new dicomImage();
     QFile fichier(chemin);
     fichier.open(QIODevice::ReadOnly);
     QByteArray content = fichier.readAll();
@@ -45,7 +45,7 @@ void DicomReader::LireTagSuivant(QByteArray::iterator* i,bool tagR){
         int nRow =  size.toHex().toInt(&ok,16);
         //qDebug() << nRow;
         QByteArray data = LireRow(i,nRow);
-        m_dcmimg.ajouterRow(tag,vrName,data,size);
+        m_dcmimg->ajouterRow(tag,vrName,data,size);
 
      }
      else if (vrName == "SQ"){
@@ -87,7 +87,7 @@ void DicomReader::LireTagSuivant(QByteArray::iterator* i,bool tagR){
          //qDebug() << nRow;
          QByteArray data = LireRow(i,nRow);
          //qDebug() << data;
-         m_dcmimg.ajouterRow(tag,vrName,reverse(&data),size);
+         m_dcmimg->ajouterRow(tag,vrName,reverse(&data),size);
 
      }
 

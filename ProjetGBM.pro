@@ -12,16 +12,24 @@ SOURCES += \
     dicomimage.cpp \
     dicomreader.cpp \
     dicomrow.cpp \
+    groupdisplayer.cpp \
     imagedisplayer.cpp \
     main.cpp \
-    fenetre.cpp
+    fenetre.cpp \
+    seriedisplayer.cpp \
+    seriefusion.cpp \
+    series.cpp
 
 HEADERS += \
     dicomimage.h \
     dicomreader.h \
     dicomrow.h \
     fenetre.h \
-    imagedisplayer.h
+    groupdisplayer.h \
+    imagedisplayer.h \
+    seriedisplayer.h \
+    seriefusion.h \
+    series.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
