@@ -7,6 +7,8 @@
 #include <QLabel>
 #include <QVBoxLayout>
 #include <seriedisplayer.h>
+#include <QPushButton>
+#include <QHash>
 class ViewControler : public QTabWidget
 {
     Q_OBJECT
@@ -18,8 +20,17 @@ private:
     QVector<QWidget*> m_Page;
     QVector<QLabel*> m_SliderLabel;
     QVector<QSlider*> m_Slider;
+    QLabel* m_opa;
+    QSlider* m_opaS;
+    QPushButton* m_opaB;
+    QHash<QString,QString> generateParamsFusion();
 public slots:
     void linkSerieDisplayer(serieDisplayer* sd, int num);
+    void fastParamsFusion();
+    void bigParamsFusion();
+signals:
+    void fastUpdate(QHash<QString,QString>,int);
+    void bigUpdate(QHash<QString,QString>);
 };
 
 #endif // VIEWCONTROLER_H

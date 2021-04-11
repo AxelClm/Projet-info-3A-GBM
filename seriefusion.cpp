@@ -5,6 +5,7 @@ SerieFusion::SerieFusion(QWidget* parent) : Series(parent)
     m_parent = parent;
     m_s1 = NULL;
     m_s2 = NULL;
+    m_ratio = 0.5;
 }
 void SerieFusion::ajouter(Series* s){
     if(m_s1 == NULL){
@@ -14,15 +15,14 @@ void SerieFusion::ajouter(Series* s){
         m_s2 =s;
     }
 }
-QImage* SerieFusion::getFirst(){
-    QVector<QImage*> res = rescale(m_s1->getIndex(0),m_s2->getIndex(0),m_s1->getIdI(0)->getX(),
-            m_s1->getIdI(0)->getY(),m_s1->getIdI(0)->getXPix(),m_s1->getIdI(0)->getYPix(),
-            m_s2->getIdI(0)->getX(),m_s2->getIdI(0)->getY(),m_s2->getIdI(0)->getXPix(),
-            m_s2->getIdI(0)->getYPix());
+QImage* SerieFusion::fastRender(int index){
+    QVector<QImage*> res = rescale(m_s1->getIndex(index),m_s2->getIndex(index),m_s1->getIdI(index)->getX(),
+            m_s1->getIdI(index)->getY(),m_s1->getIdI(index)->getXPix(),m_s1->getIdI(index)->getYPix(),
+            m_s2->getIdI(index)->getX(),m_s2->getIdI(index)->getY(),m_s2->getIdI(index)->getXPix(),
+            m_s2->getIdI(index)->getYPix());
     return fusion(res.at(0),res.at(1));
 }
 QImage* SerieFusion::fusion(QImage*a,QImage*b){
-    double ratio = 0.5;
     int pt1 = 85;
     int pt2 = 170;
     QImage* c = new QImage(a->width(),a->height(),QImage::Format_RGB16);
@@ -34,9 +34,9 @@ QImage* SerieFusion::fusion(QImage*a,QImage*b){
             int moy2 = -pixa.black() +255;
             QColor color;
             if(moy<85){
-               int tmp = moy2*ratio +moy*(1-ratio)*(255/pt1);
-               color.setGreen(moy2*ratio);
-               color.setBlue(moy2*ratio);
+               int tmp = moy2*m_ratio +moy*(1-m_ratio)*(255/pt1);
+               color.setGreen(moy2*m_ratio);
+               color.setBlue(moy2*m_ratio);
                if(tmp > 255){
                    color.setRed(255);
                }
@@ -46,9 +46,9 @@ QImage* SerieFusion::fusion(QImage*a,QImage*b){
                c->setPixelColor(x,y,color);
             }
             else if(moy<pt2){
-                int tmp = moy2*ratio +(moy*(255/85)-255)*(1-ratio);
+                int tmp = moy2*m_ratio +(moy*(255/85)-255)*(1-m_ratio);
                 color.setRed(255);
-                color.setBlue(moy2*ratio);
+                color.setBlue(moy2*m_ratio);
                 if(tmp > 255){
                     color.setGreen(255);
                 }
@@ -58,7 +58,7 @@ QImage* SerieFusion::fusion(QImage*a,QImage*b){
                 c->setPixelColor(x,y,color);
             }
             else if (moy>pt2){
-                int tmp = moy2*ratio +(moy*(255/85)-510)*(1-ratio);
+                int tmp = moy2*m_ratio +(moy*(255/85)-510)*(1-m_ratio);
                 color.setRed(255);
                 color.setBlue(255);
                 if(tmp > 255){
@@ -218,6 +218,7 @@ QImage* SerieFusion::removeXL(QImage* a, int nbrX){
 }
 void SerieFusion::InitialisationImages(){
     int t =1;
+    m_liste = QVector<QImage*>();
     synchro synch(m_s1,m_s2);
     //qDebug()<< synch.getMax();
     QProgressDialog progress("Fusion des Images","Annuler",0,synch.getMax(),m_parent);
@@ -241,4 +242,16 @@ QImage* SerieFusion::getIndex(int i){
 }
 int SerieFusion::getMax(){
     return m_liste.size();
+}
+QHash<QString,QString> SerieFusion::parms(){
+    QHash<QString,QString> map;
+    map.insert("opa",QString::number(m_ratio));
+    return map;
+}
+void SerieFusion::Updateparams(QHash<QString, QString> params){
+    QHash<QString, QString>::iterator i = params.find("opa");
+    while (i != params.end() && i.key() == "opa") {
+       m_ratio = i.value().toDouble();
+        ++i;
+    }
 }

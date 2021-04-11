@@ -11,9 +11,9 @@ void Series::ajouter(dicomImage* dcm){
     }
     m_liste.append(dcm);
 }
-QImage* Series::getFirst(){
-    m_liste.at(0)->generateImage();
-    return m_liste.at(0)->getImage();
+QImage* Series::fastRender(int i){
+    m_liste.at(i)->generateImage();
+    return m_liste.at(i)->getImage();
 }
 void Series::InitialisationImages(){
     int i =1;
@@ -44,4 +44,11 @@ int Series::getMax(){
 }
 dicomImage* Series::getIdI(int i){
     return m_liste.at(i);
+}
+QHash<QString,QString> Series::parms(){
+    QHash<QString,QString> param;
+    return param;
+}
+void Series::Updateparams(QHash<QString, QString> params){
+
 }

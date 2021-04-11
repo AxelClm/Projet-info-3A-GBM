@@ -9,10 +9,12 @@ public:
     SerieFusion(QWidget* parent);
     void ajouter(Series*);
     //void getCurrent();
-    QImage* getFirst() override;
+    QImage* fastRender(int i) override;
     void InitialisationImages() override;
     QImage* getIndex(int i) override;
     int getMax() override;
+    QHash<QString,QString> parms() override;
+    void Updateparams(QHash<QString,QString> params)override;
 private:
     QWidget* m_parent;
     QImage* fusion(QImage* a, QImage* b);
@@ -22,6 +24,7 @@ private:
     QImage* removeY(QImage*a,int nbrY);
     QImage* removeXL(QImage*a,int nbrX);
     QImage* removeYL(QImage*a,int nbrY);
+    double m_ratio;
     Series*m_s1;
     Series* m_s2;
 

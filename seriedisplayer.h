@@ -22,6 +22,8 @@ signals:
      void toucher(Series*);
 public slots:
      void changeImage(int index);
+     void changeParam(QHash<QString,QString> params, int index);
+     void changeParamAll(QHash<QString,QString>);
 };
 
 #endif // SERIEDISPLAYER_H

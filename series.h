@@ -3,17 +3,20 @@
 #include <dicomimage.h>
 #include <vector>
 #include <QProgressDialog>
+#include <QHash>
 class Series
 {
 public:
     Series(QWidget* a);
     void ajouter(dicomImage* dcm);
-    virtual QImage* getFirst();
+    virtual QImage* fastRender(int i);
     virtual void InitialisationImages();
     //virtual void getCurrent();
     virtual QImage* getIndex(int i);
     dicomImage* getIdI(int i);
     virtual int getMax();
+    virtual QHash<QString,QString> parms();
+    virtual void Updateparams(QHash<QString,QString> params);
 private:
     QWidget* m_parent;
     bool m_generated;

@@ -26,7 +26,7 @@ void GroupDisplayer::fusionnerSerie(){
     sF->ajouter(m_s2->getSerie());
     m_s1->linkSerie(sF);
     m_s1->generateImages();
-    emit loadSerie(m_s1,0);
+    emit loadSerie(m_s1,2);
 }
 void GroupDisplayer::addLayout(QHBoxLayout *layout){
     layout->addWidget(m_s1);

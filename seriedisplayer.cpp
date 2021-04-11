@@ -6,7 +6,7 @@ serieDisplayer::serieDisplayer(QWidget *parent) : ImageDisplayer(parent)
 }
 void serieDisplayer::linkSerie(Series* serie){
     m_sr = serie;
-    linkImage(m_sr->getFirst());
+    linkImage(m_sr->fastRender(0));
 }
 void serieDisplayer::mouseReleaseEvent(QMouseEvent*){
     emit toucher(m_sr);
@@ -29,6 +29,15 @@ void serieDisplayer::changeImage(int i){
         linkImage(m_sr->getIndex(i));
     }
 }
+void serieDisplayer::changeParam(QHash<QString,QString>params,int index){
+    this->getSerie()->Updateparams(params);
+    linkImage(this->getSerie()->fastRender(index));
+}
+void serieDisplayer::changeParamAll(QHash<QString,QString>params){
+    this->getSerie()->Updateparams(params);
+    this->generateImages();
+}
 Series* serieDisplayer::getSerie(){
+
     return m_sr;
 }

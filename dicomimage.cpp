@@ -98,6 +98,15 @@ bool dicomImage::generateImage(){
                 max = a;
             }
             int intensite = 255*a/qPow(2,m_BitStored);
+            int bruit = 30;
+            double coef = 255/(255-30);
+            double corr = -coef*bruit;
+            if(intensite < 30){
+                intensite = 0;
+            }
+            else{
+                intensite = intensite*coef+corr;
+            }
             color.setBlue(intensite);
             color.setRed(intensite);
             color.setGreen(intensite);
