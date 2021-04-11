@@ -5,12 +5,17 @@
 class SerieFusion : public Series
 {
 public:
-    SerieFusion();
+    SerieFusion(QWidget* parent);
     void ajouter(Series*);
     //void getCurrent();
     QImage* getFirst() override;
+    void InitialisationImages() override;
+    QImage* getIndex(int i) override;
+    int getMax() override;
 private:
+    QWidget* m_parent;
     QImage* fusion(QImage* a, QImage* b);
+    QVector<QImage*> m_liste;
     QVector<QImage*> rescale(QImage*a,QImage*b);
     QImage* removeX(QImage*a,int nbrX);
     QImage* removeY(QImage*a,int nbrY);

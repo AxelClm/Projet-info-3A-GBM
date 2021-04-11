@@ -1,11 +1,14 @@
 #include "series.h"
 
-Series::Series()
+Series::Series(QWidget* a)
 {
-    imgGenerer = false;
+    m_parent = a;
+    m_generated = false;
 }
 void Series::ajouter(dicomImage* dcm){
-    imgGenerer = false;
+    if(m_generated == true){
+        dcm->generateImage();
+    }
     m_liste.append(dcm);
 }
 QImage* Series::getFirst(){
@@ -14,13 +17,26 @@ QImage* Series::getFirst(){
 }
 void Series::InitialisationImages(){
     int i =1;
+    QProgressDialog progress("Generation des Images","Annuler",0,getMax(),m_parent);
+    progress.setWindowModality(Qt::WindowModal);
     QVector<dicomImage*>::iterator it;
     for(it = m_liste.begin();it<m_liste.end();it++){
         //It.hasNext() ne marche pas (boucle while) ???
         (*it)->generateImage();
+        progress.setValue(i);
         qDebug() << i <<"/"<<m_liste.size();
         i++;
     }
+    m_generated = true;
 
+}
+QImage* Series::getIndex(int i){
+    if(m_generated == true){
+        return m_liste.at(i)->getImage();
+    }
+
+}
+int Series::getMax(){
+    return m_liste.size();
 }
 

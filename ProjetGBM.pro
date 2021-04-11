@@ -12,6 +12,7 @@ SOURCES += \
     dicomimage.cpp \
     dicomreader.cpp \
     dicomrow.cpp \
+    groupdisplayer.cpp \
     imagedisplayer.cpp \
     main.cpp \
     fenetre.cpp \
@@ -24,6 +25,7 @@ HEADERS += \
     dicomreader.h \
     dicomrow.h \
     fenetre.h \
+    groupdisplayer.h \
     imagedisplayer.h \
     seriedisplayer.h \
     seriefusion.h \

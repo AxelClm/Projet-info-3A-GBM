@@ -23,18 +23,24 @@ Fenetre::Fenetre(){
     m_FrameG->setMaximumHeight(999999);
     m_VBGaucheLayout->addWidget(m_FrameG);
     //Creation menu millieu (tmp)
-    m_sDM = new serieDisplayer(this);
-    m_HBMidLayout->addWidget(m_sDM);
-    m_sDM2 = new serieDisplayer(this);
-    m_HBMidLayout->addWidget(m_sDM2);
-    m_fusion = new SerieFusion();
-    //Creation menu gauche
+    m_GD = new GroupDisplayer(this);
+    m_GD->setMaximumHeight(999999);
+    m_HBMidLayout->addWidget(m_GD);
+    m_HBMidLayout->setAlignment(Qt::AlignCenter);
+    m_GD->addLayout(m_HBMidLayout);
+    //Creation menu droit
+    m_FrameD = new QFrame(this);
+    m_VBDroiteLayout->addWidget(m_FrameD);
+    m_slider = new QSlider(Qt::Horizontal,m_FrameD);
+    m_VBDroiteLayout->addWidget(m_slider);
+    m_VBDroiteLayout->setAlignment(Qt::AlignTop);
     this->setGeometry(0,0,900,600);
     QSize NSize = QSize(850,600);
     QSize OSize = QSize(this->size());
     QResizeEvent * ev = new  QResizeEvent(NSize,OSize);
     QCoreApplication::postEvent(this,ev);
     QObject::connect(m_ajoutSerie,SIGNAL(clicked()),this,SLOT(ajouterSerie()));
+    QObject::connect(m_fusionSerie,SIGNAL(clicked()),m_GD,SLOT(fusionnerSerie()));
 }
 
 Fenetre::~Fenetre()
@@ -49,13 +55,11 @@ void Fenetre::resizeEvent(QResizeEvent* event){
     else if(test < 100){
         m_GWidth = 100;
     }
-    int taille = (event->size().width()-m_GWidth-100)/2;
-    m_sDM->changerS(taille);
-    m_sDM2->changerS(taille);
+    int taille = (event->size().width()-m_GWidth-200);
     //qDebug() << mGWidth;
-    m_ajoutSerie->setContentsMargins(0,10,0,10);
-    m_fusionSerie->setContentsMargins(0,10,0,10);
     m_FrameG->setFixedWidth(m_GWidth);
+    m_FrameD->setFixedWidth(m_GWidth);
+    m_GD->setW(taille);
     if(m_sd != NULL){
         m_sd->changerS(m_GWidth);
     }
@@ -66,7 +70,7 @@ void Fenetre::resizeEvent(QResizeEvent* event){
 void Fenetre::ajouterSerie(){
     QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),"/home",QFileDialog::ShowDirsOnly| QFileDialog::DontResolveSymlinks);
     QDirIterator it(dir,{"*.dcm"}, QDir::Files);
-        Series* s = new Series();
+        Series* s = new Series(this);
         while(it.hasNext()){
             s->ajouter(m_dcm.parseDicom(it.next()));
         }
@@ -74,17 +78,6 @@ void Fenetre::ajouterSerie(){
         m_sd->linkSerie(s);
         m_VBGaucheLayout->addWidget(m_sd);
         m_sd->changerS(m_GWidth);
-        QObject::connect(m_sd,SIGNAL(toucher(Series*)),this,SLOT(afficherSerie(Series*)));
+        QObject::connect(m_sd,SIGNAL(toucher(Series*)),m_GD,SLOT(afficherSerie(Series*)));
 }
-void Fenetre::afficherSerie(Series* sr){
-    //m_fusion->ajouter(sr);
-    if(m_sDM->isEmpty()){
-        m_sDM->linkSerie(sr);
-        m_sDM->generateImages();
-    }
-    else if(m_sDM2->isEmpty()){
-        m_sDM2->linkSerie(sr);
-        m_sDM2->generateImages();
-    }
 
-}

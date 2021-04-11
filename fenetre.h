@@ -18,23 +18,26 @@
 #include <QFileDialog>
 #include <QDirIterator>
 #include <QFrame>
+#include <QSlider>
 #include "series.h"
 #include "seriedisplayer.h"
 #include "seriefusion.h"
+#include "groupdisplayer.h"
 class Fenetre : public QWidget
 {
     Q_OBJECT
 private:
     DicomReader m_dcm;
-    serieDisplayer* m_sDM;
-    serieDisplayer* m_sDM2;
     //serieDisplayer* m_sD2;
     QFrame* m_FrameG;
+    QFrame* m_FrameD;
+    GroupDisplayer* m_GD;
     int m_GWidth;
     QHBoxLayout* m_HBLayout;
     QHBoxLayout* m_HBMidLayout;
     QVBoxLayout* m_VBDroiteLayout;
     QVBoxLayout* m_VBGaucheLayout;
+    QSlider* m_slider;
     QPushButton* m_ajoutSerie;
     QPushButton* m_fusionSerie;
     serieDisplayer* m_sd;
@@ -45,7 +48,6 @@ public:
     virtual ~Fenetre();
 public slots:
     void ajouterSerie();
-    void afficherSerie(Series* sr);
 
 };
 #endif // FENETRE_H

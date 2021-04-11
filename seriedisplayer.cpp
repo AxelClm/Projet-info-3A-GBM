@@ -24,3 +24,11 @@ void serieDisplayer::generateImages(){
         m_sr->InitialisationImages();
     }
 }
+void serieDisplayer::changeImage(int i){
+    if(!(i>m_sr->getMax()-1)){
+        linkImage(m_sr->getIndex(i));
+    }
+}
+Series* serieDisplayer::getSerie(){
+    return m_sr;
+}

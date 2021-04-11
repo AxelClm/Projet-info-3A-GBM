@@ -13,12 +13,15 @@ public:
     void linkSerie(Series *);
     bool isEmpty();
     void generateImages();
+    Series* getSerie();
 private:
     Series* m_sr;
 protected:
     void mouseReleaseEvent(QMouseEvent*) override;
 signals:
      void toucher(Series*);
+public slots:
+     void changeImage(int index);
 };
 
 #endif // SERIEDISPLAYER_H

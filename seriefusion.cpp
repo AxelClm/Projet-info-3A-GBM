@@ -1,7 +1,8 @@
 #include "seriefusion.h"
 
-SerieFusion::SerieFusion()
+SerieFusion::SerieFusion(QWidget* parent) : Series(parent)
 {
+    m_parent = parent;
     m_s1 = NULL;
     m_s2 = NULL;
 }
@@ -60,7 +61,7 @@ QImage* SerieFusion::fusion(QImage*a,QImage*b){
             else if (moy>pt2){
                 int tmp = moy2*ratio +(moy*(255/85)-510)*(1-ratio);
                 color.setRed(255);
-                (255);
+                color.setBlue(255);
                 if(tmp > 255){
                     color.setBlue(255);
                 }
@@ -223,4 +224,20 @@ QImage* SerieFusion::removeXL(QImage* a, int nbrX){
     }
     return c;
 
+}
+void SerieFusion::InitialisationImages(){
+    int t =1;
+    QProgressDialog progress("Generation des Images","Annuler",0,m_s1->getMax(),m_parent);
+    progress.setWindowModality(Qt::WindowModal);
+    for(int i=0;i<m_s1->getMax();i++){
+       QVector<QImage*> res = rescale(m_s1->getIndex(i),m_s2->getIndex(i));
+       m_liste.append(fusion(res.at(0),res.at(1)));
+       progress.setValue(t);
+    }
+}
+QImage* SerieFusion::getIndex(int i){
+    return m_liste.at(i);
+}
+int SerieFusion::getMax(){
+    return m_liste.size();
 }

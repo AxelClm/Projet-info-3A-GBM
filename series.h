@@ -2,17 +2,20 @@
 #define SERIES_H
 #include <dicomimage.h>
 #include <vector>
+#include <QProgressDialog>
 class Series
 {
 public:
-    Series();
+    Series(QWidget* a);
     void ajouter(dicomImage* dcm);
     virtual QImage* getFirst();
     virtual void InitialisationImages();
     //virtual void getCurrent();
-    //virtual void getNext();
+    virtual QImage* getIndex(int i);
+    virtual int getMax();
 private:
-    bool imgGenerer;
+    QWidget* m_parent;
+    bool m_generated;
     QVector<dicomImage*> m_liste;
 };
 
