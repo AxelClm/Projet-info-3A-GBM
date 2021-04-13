@@ -17,17 +17,28 @@ QImage* Series::fastRender(int i){
 }
 void Series::InitialisationImages(){
     int i =1;
-    QProgressDialog progress("Generation des Images","Annuler",0,getMax(),m_parent);
-    progress.setWindowModality(Qt::WindowModal);
+    QMutex mutex;
+    QProgressDialog progress("Generation des Images","Annuler",0,getMax());
+    //progress.setModal(true);
+    //progress.setWindowModality(Qt::WindowModal);
     progress.setMinimumDuration(0);
     QVector<dicomImage*>::iterator it;
+    QThreadPool *threadPool = new QThreadPool();
+    threadPool->setMaxThreadCount(QThread::idealThreadCount());
+    QVector<ParsingJob*> pile;
     for(it = m_liste.begin();it<m_liste.end();it++){
         //It.hasNext() ne marche pas (boucle while) ???
-        (*it)->generateImage();
-        progress.setValue(i);
-        qDebug() << i <<"/"<<m_liste.size();
-        i++;
+        ParsingJob* pJob = new ParsingJob();
+        pile.append(pJob);
+        pJob->linkDicomImage(*it);
+        pJob->linkProgress(&i,&progress,&mutex);
+        pJob->setAutoDelete(true);
+        QObject::connect(pJob,SIGNAL(terminer(int)),&progress,SLOT(setValue(int)));
+        threadPool->start(pJob);
     }
+    progress.exec();
+    threadPool->waitForDone();
+    qDebug() << "fini";
     m_generated = true;
 
 }

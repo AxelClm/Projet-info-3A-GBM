@@ -4,8 +4,12 @@
 #include <vector>
 #include <QProgressDialog>
 #include <QHash>
-class Series
+#include <QThreadPool>
+#include <parsingjob.h>
+#include <QMutex>
+class Series: public QObject
 {
+    Q_OBJECT
 public:
     Series(QWidget* a);
     void ajouter(dicomImage* dcm);

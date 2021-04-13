@@ -65,40 +65,45 @@ bool dicomImage::generateImage(){
     }
     QByteArray data = m_header[m_Indeximage].getData(); 
     m_image = new QImage(m_Row,m_Columns,QImage::Format_Grayscale16);
-    int a = 0;
+    QByteArray::iterator z = data.begin();
+    int nbrPix = 0;
     QBitArray tmpBit(m_BitAllocated,false);
-    for(int m=0;m<m_Columns;m++){
-        for(int n=0;n<m_Row;n++){
-            for(int i = 0; i < 2; i++) {
-                  for(int b = 0; b < 8; b++) {
-                    tmpBit.setBit( i * 8 + b, data.at((1-i)+n*2+m_Row*m*2) & (1 << (7 - b)) );
-                  }
-            }
-            // On met maintenant les bits en Int
-            a=0;
-            for(int i =0 ; i < m_BitStored ; i++){
-                if(tmpBit.at(m_BitAllocated-i-1)==true){
-                    a = a + qPow(2,i);
-                }
-            }
-            QColor color;
+    int a=0;
+    while(z !=data.end()){
+           for(int b = 0; b < 8; b++) {
+               tmpBit.setBit( 1 * 8 + b, *z & (1 << (7 - b)) );
+           }
+           z++;
+           for(int b = 0; b < 8; b++) {
+               tmpBit.setBit( 0 * 8 + b, *z & (1 << (7 - b)) );
+           }
+           z++;
+           a=0;
+           for(int i =0 ; i < m_BitStored ; i++){
+               if(tmpBit.at(m_BitAllocated-i-1)==true){
+                   a = a + qPow(2,i);
+                   }
+           }
+           QColor color;
 
             int intensite = 255*a/qPow(2,m_BitStored);
             int bruit = 30;
             double coef = 255/(255-30);
             double corr = -coef*bruit;
             if(intensite < 30){
-                intensite = 0;
+               intensite = 0;
             }
             else{
                 intensite = intensite*coef+corr;
-            }
-            color.setBlue(intensite);
-            color.setRed(intensite);
-            color.setGreen(intensite);
-            m_image->setPixelColor(n,m,color);
-        }
+             }
+             color.setBlue(intensite);
+             color.setRed(intensite);
+             color.setGreen(intensite);
+             m_image->setPixelColor(nbrPix%m_Row,nbrPix/m_Row,color);
+             nbrPix++;
+
     }
+     // On met maintenant les bits en Int
     //qDebug() << "Max Image : " << max;
     return true;
 }

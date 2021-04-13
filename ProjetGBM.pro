@@ -16,6 +16,7 @@ SOURCES += \
     imagedisplayer.cpp \
     main.cpp \
     fenetre.cpp \
+    parsingjob.cpp \
     seriedisplayer.cpp \
     seriefusion.cpp \
     series.cpp \
@@ -29,6 +30,7 @@ HEADERS += \
     fenetre.h \
     groupdisplayer.h \
     imagedisplayer.h \
+    parsingjob.h \
     seriedisplayer.h \
     seriefusion.h \
     series.h \
