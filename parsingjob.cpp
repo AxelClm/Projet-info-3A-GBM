@@ -7,8 +7,9 @@ ParsingJob::ParsingJob()
     m_p = NULL;
 }
 
-void ParsingJob::linkDicomImage(dicomImage * dcm){
+void ParsingJob::linkDicomImage(dicomImage * dcm, int bruit){
     this->m_dcm = dcm;
+    this->m_bruit = bruit;
 }
 void ParsingJob::linkProgress(int *i, QProgressDialog *progress , QMutex* mutex){
     this->m_i = i;
@@ -17,7 +18,7 @@ void ParsingJob::linkProgress(int *i, QProgressDialog *progress , QMutex* mutex)
 }
 void ParsingJob::run(){
     if(m_dcm != NULL){
-        m_dcm->generateImage();
+        m_dcm->generateImage(m_bruit);
     }
     if(m_i != NULL && m_p != NULL){
         //MUTEX !!!

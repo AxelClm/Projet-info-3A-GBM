@@ -59,7 +59,7 @@ void dicomImage::ajouterRow(QByteArray Tag, QByteArray VR, QByteArray data, QByt
         //qDebug() <<"yP =" <<m_yPix;
     }
 }
-bool dicomImage::generateImage(){
+bool dicomImage::generateImage(int bruit){
     if(m_BitAllocated == -1 || m_BitStored == -1 || m_Indeximage ==-1 || m_Row == -1 || m_Columns == -1){
         return false;
     }
@@ -87,10 +87,9 @@ bool dicomImage::generateImage(){
            QColor color;
 
             int intensite = 255*a/qPow(2,m_BitStored);
-            int bruit = 30;
-            double coef = 255/(255-30);
+            double coef = 255/(255-bruit);
             double corr = -coef*bruit;
-            if(intensite < 30){
+            if(intensite < bruit){
                intensite = 0;
             }
             else{

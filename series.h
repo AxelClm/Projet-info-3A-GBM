@@ -22,6 +22,7 @@ public:
     virtual QHash<QString,QString> parms();
     virtual void Updateparams(QHash<QString,QString> params);
 private:
+    int m_bruit;
     QWidget* m_parent;
     bool m_generated;
     QVector<dicomImage*> m_liste;

@@ -13,13 +13,15 @@ class dicomImage
 public:
     dicomImage();
     void ajouterRow(QByteArray Tag, QByteArray VR,QByteArray data,QByteArray size);
-    bool generateImage();
+    bool generateImage(int bruit);
     QImage* getImage();
     double getSliceL();
     double getX();
     double getY();
     double getXPix();
     double getYPix();
+    int getBruit();
+    void setBruit(int val);
     private:
     QVector<DicomRow> m_header;
     QImage* m_image;

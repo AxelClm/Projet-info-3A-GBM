@@ -10,9 +10,10 @@ class ParsingJob :public QObject, public QRunnable
     Q_OBJECT
 public:
     ParsingJob();
-    void linkDicomImage(dicomImage*dcm);
+    void linkDicomImage(dicomImage*dcm,int bruit);
     void linkProgress(int * i, QProgressDialog* progress,QMutex* mutex);
 private:
+    int m_bruit;
     dicomImage* m_dcm;
     QProgressDialog* m_p;
     int* m_i;

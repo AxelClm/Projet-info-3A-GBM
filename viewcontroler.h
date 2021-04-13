@@ -9,6 +9,7 @@
 #include <seriedisplayer.h>
 #include <QPushButton>
 #include <QHash>
+#include <QSpinBox>
 class ViewControler : public QTabWidget
 {
     Q_OBJECT
@@ -20,14 +21,22 @@ private:
     QVector<QWidget*> m_Page;
     QVector<QLabel*> m_SliderLabel;
     QVector<QSlider*> m_Slider;
+    QVector<QLabel*> m_ptsLabel1;
+    QVector<QSpinBox*> m_spinB1;
+    QVector<QPushButton*> m_button1;
     QLabel* m_opa;
     QSlider* m_opaS;
     QPushButton* m_opaB;
     QHash<QString,QString> generateParamsFusion();
+    QHash<QString,QString> generateParamsBase();
+    serieDisplayer** m_STab;
+
 public slots:
     void linkSerieDisplayer(serieDisplayer* sd, int num);
     void fastParamsFusion();
     void bigParamsFusion();
+    void fastParamsSer();
+    void bigParamsSet();
 signals:
     void fastUpdate(QHash<QString,QString>,int);
     void bigUpdate(QHash<QString,QString>);

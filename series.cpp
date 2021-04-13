@@ -4,15 +4,16 @@ Series::Series(QWidget* a)
 {
     m_parent = a;
     m_generated = false;
+    this->m_bruit =0;
 }
 void Series::ajouter(dicomImage* dcm){
     if(m_generated == true){
-        dcm->generateImage();
+        dcm->generateImage(m_bruit);
     }
     m_liste.append(dcm);
 }
 QImage* Series::fastRender(int i){
-    m_liste.at(i)->generateImage();
+    m_liste.at(i)->generateImage(m_bruit);
     return m_liste.at(i)->getImage();
 }
 void Series::InitialisationImages(){
@@ -30,7 +31,7 @@ void Series::InitialisationImages(){
         //It.hasNext() ne marche pas (boucle while) ???
         ParsingJob* pJob = new ParsingJob();
         pile.append(pJob);
-        pJob->linkDicomImage(*it);
+        pJob->linkDicomImage(*it,m_bruit);
         pJob->linkProgress(&i,&progress,&mutex);
         pJob->setAutoDelete(true);
         QObject::connect(pJob,SIGNAL(terminer(int)),&progress,SLOT(setValue(int)));
@@ -57,9 +58,14 @@ dicomImage* Series::getIdI(int i){
     return m_liste.at(i);
 }
 QHash<QString,QString> Series::parms(){
-    QHash<QString,QString> param;
-    return param;
+    QHash<QString,QString> map;
+    map.insert("bruit",QString::number(m_bruit));
+    return map;
 }
 void Series::Updateparams(QHash<QString, QString> params){
-
+    QHash<QString, QString>::iterator i = params.find("bruit");
+    while (i != params.end() && i.key() == "bruit") {
+       m_bruit = i.value().toDouble();
+        ++i;
+    }
 }

@@ -33,7 +33,7 @@ QImage* SerieFusion::fusion(QImage*a,QImage*b){
             int moy = -pixb.black() + 255;
             int moy2 = -pixa.black() +255;
             QColor color;
-            if(moy<85){
+            if(moy<pt1){
                int tmp = moy2*m_ratio +moy*(1-m_ratio)*(255/pt1);
                color.setGreen(moy2*m_ratio);
                color.setBlue(moy2*m_ratio);
@@ -46,7 +46,7 @@ QImage* SerieFusion::fusion(QImage*a,QImage*b){
                c->setPixelColor(x,y,color);
             }
             else if(moy<pt2){
-                int tmp = moy2*m_ratio +(moy*(255/85)-255)*(1-m_ratio);
+                int tmp = moy2*m_ratio +(moy*(255/(pt2-pt1))-(255/(pt2-pt1))*pt1)*(1-m_ratio);
                 color.setRed(255);
                 color.setBlue(moy2*m_ratio);
                 if(tmp > 255){
@@ -58,7 +58,7 @@ QImage* SerieFusion::fusion(QImage*a,QImage*b){
                 c->setPixelColor(x,y,color);
             }
             else if (moy>pt2){
-                int tmp = moy2*m_ratio +(moy*(255/85)-510)*(1-m_ratio);
+                int tmp = moy2*m_ratio +(moy*(255/(255-pt2))-(255/(255-pt2))*pt2)*(1-m_ratio);
                 color.setRed(255);
                 color.setBlue(255);
                 if(tmp > 255){
