@@ -5,6 +5,8 @@ ViewControler::ViewControler(QWidget * parent) : QTabWidget(parent)
     createPage("Série 1",0);
     createPage("Série 2",1);
     createPage("Fusion",2);
+    createPage("Damier",3);
+    this->removeTab(3);
     this->removeTab(2);
     this->removeTab(1);
     this->removeTab(0);
@@ -81,6 +83,26 @@ void ViewControler::createPage(QString nom,int index){
         QObject::connect(m_pt2,SIGNAL(valueChanged(int)),this,SLOT(fastParamsFusion()));
         QObject::connect(m_opaB,SIGNAL(clicked()),this,SLOT(bigParamsFusion()));
     }
+    if(index == 3){
+        m_ser = new QPushButton(m_Page.at(index));
+        m_ser->setText("Appliquer à toute la série");
+        m_LDx = new QLabel(m_Page.at(index));
+        m_LDx->setText("Cadrillage : X");
+        m_Dx = new QSpinBox(m_Page.at(index));
+        m_Dx->setMinimum(2);
+        m_LDy = new QLabel(m_Page.at(index));
+        m_LDy->setText("Cadrillage : Y");
+        m_pDy = new QSpinBox(m_Page.at(index));
+        m_pDy->setMinimum(2);
+        m_Layout.at(index)->addWidget(m_LDx);
+        m_Layout.at(index)->addWidget(m_Dx);
+        m_Layout.at(index)->addWidget(m_LDy);
+        m_Layout.at(index)->addWidget(m_pDy);
+        m_Layout.at(index)->addWidget(m_ser);
+        QObject::connect(m_Dx,SIGNAL(valueChanged(int)),this,SLOT(fastParamsDamier()));
+        QObject::connect(m_pDy,SIGNAL(valueChanged(int)),this,SLOT(fastParamsDamier()));
+        QObject::connect(m_ser,SIGNAL(clicked()),this,SLOT(bigParamsDamier()));
+    }
     m_remove.append(new QPushButton(m_Page.at(index)));
     m_remove.at(index)->setText("Enlever Serie");
     m_Layout.at(index)->addWidget(m_remove.at(index));
@@ -146,6 +168,24 @@ void ViewControler::linkSerieDisplayer(serieDisplayer* sd, int num){
           m_STab[0] = sd;
           break;
         }
+        case 3:{
+         this->removeTab(0);
+         this->insertTab(0,m_Page.at(3),"damier");
+         m_Slider.at(3)->setMaximum(sd->getSerie()->getMax());
+         QObject::connect(m_Slider.at(3),SIGNAL(valueChanged(int)),sd,SLOT(changeImage(int)));
+         QHash<QString, QString> params = sd->getSerie()->parms();
+         QHash<QString, QString>::iterator i = params.find("dx");
+         while (i != params.end() && i.key() == "dx") {
+            m_Dx->setValue(i.value().toDouble());
+             ++i;
+         }
+         i = params.find("dy");
+         while (i != params.end() && i.key() == "dx") {
+            m_pDy->setValue(i.value().toDouble());
+            ++i;
+         }
+         break;
+        }
     }
 }
 void ViewControler::unlinkSerie(int index){
@@ -194,6 +234,27 @@ QHash<QString,QString> ViewControler::generateParamsBase(){
     QHash<QString,QString> map;
     map.insert("bruit",QString::number(val));
     return map;
+}
+void ViewControler::fastParamsDamier(){
+    QObject::connect(this,SIGNAL(fastUpdate(QHash<QString,QString>,int)),m_STab[currentIndex()],SLOT(changeParam(QHash<QString,QString>,int)));
+    QObject::connect(this,SIGNAL(bigUpdate(QHash<QString,QString>)),m_STab[currentIndex()],SLOT(changeParamAll(QHash<QString,QString>)));
+    emit fastUpdate(generateParamsDamier(),m_Slider.at(currentIndex())->value());
+    QObject::disconnect(this,SIGNAL(fastUpdate(QHash<QString,QString>,int)),m_STab[currentIndex()],SLOT(changeParam(QHash<QString,QString>,int)));
+    QObject::disconnect(this,SIGNAL(bigUpdate(QHash<QString,QString>)),m_STab[currentIndex()],SLOT(changeParamAll(QHash<QString,QString>)));
+
+}
+QHash<QString,QString> ViewControler::generateParamsDamier(){
+    QHash<QString,QString> map;
+    map.insert("dx",QString::number(m_Dx->value()));
+    map.insert("dy",QString::number(m_pDy->value()));
+    return map;
+}
+void ViewControler::bigParamsDamier(){
+    QObject::connect(this,SIGNAL(fastUpdate(QHash<QString,QString>,int)),m_STab[currentIndex()],SLOT(changeParam(QHash<QString,QString>,int)));
+    QObject::connect(this,SIGNAL(bigUpdate(QHash<QString,QString>)),m_STab[currentIndex()],SLOT(changeParamAll(QHash<QString,QString>)));
+    emit bigUpdate(generateParamsFusion());
+    QObject::disconnect(this,SIGNAL(fastUpdate(QHash<QString,QString>,int)),m_STab[currentIndex()],SLOT(changeParam(QHash<QString,QString>,int)));
+    QObject::disconnect(this,SIGNAL(bigUpdate(QHash<QString,QString>)),m_STab[currentIndex()],SLOT(changeParamAll(QHash<QString,QString>)));
 }
 void ViewControler::remove(){
     emit removed(this->currentIndex());

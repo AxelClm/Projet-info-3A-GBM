@@ -1,19 +1,19 @@
-#include "seriefusion.h"
+#include "seriedamier.h"
 
-SerieFusion::SerieFusion(QWidget* parent) : Series(parent)
+SerieDamier::SerieDamier(QWidget* parent) : Series(parent)
 {
     m_parent = parent;
     m_s1 = NULL;
     m_s2 = NULL;
-    m_ratio = 0.5;
-    m_pt1 = 85;
-    m_pt2 = 170;
+    m_dX = 2;
+    m_dY = 2;
     m_synchro = NULL;
+
 }
-SerieFusion::~SerieFusion(){
-    delete m_synchro; // On ne supprime pas les autres pointeurs car les adresses serviront tj
+SerieDamier::~SerieDamier(){
+
 }
-void SerieFusion::ajouter(Series* s){
+void SerieDamier::ajouter(Series *s){
     if(m_s1 == NULL){
         m_s1 = s;
     }
@@ -21,7 +21,7 @@ void SerieFusion::ajouter(Series* s){
         m_s2 =s;
     }
 }
-QImage* SerieFusion::fastRender(int index){
+QImage* SerieDamier::fastRender(int index){
     if(m_synchro == NULL){
         m_synchro = new synchro(m_s1,m_s2);
     }
@@ -30,60 +30,33 @@ QImage* SerieFusion::fastRender(int index){
             m_s1->getIdI(tab[0])->getY(),m_s1->getIdI(tab[0])->getXPix(),m_s1->getIdI(tab[0])->getYPix(),
             m_s2->getIdI(tab[1])->getX(),m_s2->getIdI(tab[1])->getY(),m_s2->getIdI(tab[1])->getXPix(),
             m_s2->getIdI(tab[1])->getYPix());
-    return fusion(res.at(0),res.at(1));
+    return damier(res.at(0),res.at(1));
 }
-
-QImage* SerieFusion::fusion(QImage*a,QImage*b){
-    QImage* c = new QImage(a->width(),a->height(),QImage::Format_RGB16);
+QImage* SerieDamier::damier(QImage* a, QImage* b){
+    QImage* c = new QImage(a->width(),a->height(),QImage::Format_Grayscale16);
     for(int y = 0 ; y<a->height() ; y++){
         for(int x=0;x<a->width();x++){
-            QColor pixa = a->pixelColor(x,y);
-            QColor pixb = b->pixelColor(x,y);
-            int moy = -pixb.black() + 255;
-            int moy2 = -pixa.black() +255;
-            QColor color;
-            if(moy<m_pt1){
-               int tmp = moy2*m_ratio +moy*(1-m_ratio)*(255/m_pt1);
-               color.setGreen(moy2*m_ratio);
-               color.setBlue(moy2*m_ratio);
-               if(tmp > 255){
-                   color.setRed(255);
-               }
-               else{
-                   color.setRed(tmp);
-               }
-               c->setPixelColor(x,y,color);
-            }
-            else if(moy<m_pt2){
-                int tmp = moy2*m_ratio +(moy*(255/(m_pt2-m_pt1))-(255/(m_pt2-m_pt1))*m_pt1)*(1-m_ratio);
-                color.setRed(moy2*m_ratio+127*(1-m_ratio));
-                color.setBlue(moy2*m_ratio);
-                if(tmp > 255){
-                    color.setGreen(255);
+            if((y/(a->height()/m_dY))%2 == 0){
+                if((x/(a->width()/m_dX))%2 == 0){
+                    c->setPixelColor(x,y,a->pixelColor(x,y));
                 }
                 else{
-                    color.setGreen(tmp);
+                    c->setPixelColor(x,y,b->pixelColor(x,y));
                 }
-                c->setPixelColor(x,y,color);
             }
-            else if (moy>m_pt2){
-                int tmp = moy2*m_ratio +(moy*(255/(255-m_pt2))-(255/(255-m_pt2))*m_pt2)*(1-m_ratio);
-                color.setRed(moy2*m_ratio+127*(1-m_ratio));
-                color.setGreen(moy2*m_ratio+127*(1-m_ratio));
-                if(tmp > 255){
-                    color.setBlue(255);
+            else{
+                if((x/(a->width()/m_dX))%2 != 0){
+                    c->setPixelColor(x,y,a->pixelColor(x,y));
                 }
                 else{
-                    color.setBlue(tmp);
+                    c->setPixelColor(x,y,b->pixelColor(x,y));
                 }
-                c->setPixelColor(x,y,color);
-             }
-           }
+            }
         }
+    }
     return c;
 }
-
-QVector<QImage*> SerieFusion::rescale(QImage*a,QImage*b,double xa , double ya, double xas , double yas , double xb, double yb,double xbs, double ybs){
+QVector<QImage*> SerieDamier::rescale(QImage*a,QImage*b,double xa , double ya, double xas , double yas , double xb, double yb,double xbs, double ybs){
     bool achanged = false;
     bool bchanged = false;
 
@@ -181,7 +154,7 @@ QVector<QImage*> SerieFusion::rescale(QImage*a,QImage*b,double xa , double ya, d
     res.append(b);
     return res;
 }
-QImage* SerieFusion::removeX(QImage* a, int nbrX){
+QImage* SerieDamier::removeX(QImage* a, int nbrX){
     QImage*c = new QImage(a->width()-nbrX,a->height(),QImage::Format_Grayscale16);
     for(int y=0;y<a->height();y++){
         for(int x=nbrX;x<a->width();x++){
@@ -192,7 +165,7 @@ QImage* SerieFusion::removeX(QImage* a, int nbrX){
     return c;
 
 }
-QImage* SerieFusion::removeY(QImage* a, int nbrY){
+QImage* SerieDamier::removeY(QImage* a, int nbrY){
     QImage*c = new QImage(a->width(),a->height()-nbrY,QImage::Format_Grayscale16);
     for(int y=nbrY;y<a->height();y++){
         for(int x=0;x<a->width();x++){
@@ -203,7 +176,7 @@ QImage* SerieFusion::removeY(QImage* a, int nbrY){
     return c;
 
 }
-QImage* SerieFusion::removeYL(QImage* a, int nbrY){
+QImage* SerieDamier::removeYL(QImage* a, int nbrY){
     QImage*c = new QImage(a->width(),a->height()-nbrY,QImage::Format_Grayscale16);
     for(int y=0;y<a->height()-nbrY;y++){
         for(int x=0;x<a->width();x++){
@@ -214,7 +187,7 @@ QImage* SerieFusion::removeYL(QImage* a, int nbrY){
     return c;
 
 }
-QImage* SerieFusion::removeXL(QImage* a, int nbrX){
+QImage* SerieDamier::removeXL(QImage* a, int nbrX){
     QImage*c = new QImage(a->width()-nbrX,a->height(),QImage::Format_Grayscale16);
     for(int y=0;y<a->height();y++){
         for(int x=0;x<a->width()-nbrX;x++){
@@ -225,13 +198,13 @@ QImage* SerieFusion::removeXL(QImage* a, int nbrX){
     return c;
 
 }
-void SerieFusion::InitialisationImages(){
+void SerieDamier::InitialisationImages(){
     int t =1;
     m_liste = QVector<QImage*>();
     if(m_synchro == NULL){
         m_synchro = new synchro(m_s1,m_s2);
     }
-    //qDebug()<< synch.getMax();
+
     QProgressDialog progress("Fusion des Images","Annuler",0,m_synchro->getMax(),m_parent);
     progress.setWindowModality(Qt::WindowModal);
     progress.setMinimumDuration(0);
@@ -242,39 +215,33 @@ void SerieFusion::InitialisationImages(){
                m_s1->getIdI(tab[0])->getY(),m_s1->getIdI(tab[0])->getXPix(),m_s1->getIdI(tab[0])->getYPix(),
                m_s2->getIdI(tab[1])->getX(),m_s2->getIdI(tab[1])->getY(),m_s2->getIdI(tab[1])->getXPix(),
                m_s2->getIdI(tab[1])->getYPix());
-       m_liste.append(fusion(res.at(0),res.at(1)));
+       m_liste.append(damier(res.at(0),res.at(1)));
        progress.setValue(t);
        t++;
+       qDebug() <<t;
     }
-    //qDebug() << "fini2";
 }
-QImage* SerieFusion::getIndex(int i){
+QImage* SerieDamier::getIndex(int i){
     return m_liste.at(i);
 }
-int SerieFusion::getMax(){
+int SerieDamier::getMax(){
     return m_liste.size();
 }
-QHash<QString,QString> SerieFusion::parms(){
+QHash<QString,QString> SerieDamier::parms(){
     QHash<QString,QString> map;
-    map.insert("opa",QString::number(m_ratio));
-    map.insert("pt1",QString::number(m_pt1));
-    map.insert("pt2",QString::number(m_pt2));
+    map.insert("dx",QString::number(m_dX));
+    map.insert("dy",QString::number(m_dY));
     return map;
 }
-void SerieFusion::Updateparams(QHash<QString, QString> params){
-    QHash<QString, QString>::iterator i = params.find("opa");
-    while (i != params.end() && i.key() == "opa") {
-       m_ratio = i.value().toDouble();
+void SerieDamier::Updateparams(QHash<QString, QString> params){
+    QHash<QString, QString>::iterator i = params.find("dx");
+    while (i != params.end() && i.key() == "dx") {
+       m_dX = i.value().toDouble();
         ++i;
     }
-    i = params.find("pt1");
-    while (i != params.end() && i.key() == "pt1") {
-       m_pt1 = i.value().toInt();
-        ++i;
-    }
-    i = params.find("pt2");
-    while (i != params.end() && i.key() == "pt2") {
-       m_pt2 = i.value().toInt();
+    i = params.find("dy");
+    while (i != params.end() && i.key() == "dy") {
+       m_dY = i.value().toInt();
         ++i;
     }
 }

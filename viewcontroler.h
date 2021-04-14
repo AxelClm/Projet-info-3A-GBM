@@ -29,18 +29,26 @@ private:
     QSlider* m_opaS;
     QPushButton* m_opaB;
     QHash<QString,QString> generateParamsFusion();
+    QHash<QString,QString> generateParamsDamier();
     QHash<QString,QString> generateParamsBase();
     serieDisplayer** m_STab;
     QLabel* m_LPt1;
     QSpinBox* m_pt1;
     QLabel* m_LPt2;
     QSpinBox* m_pt2;
+    QLabel* m_LDx;
+    QSpinBox* m_Dx;
+    QLabel* m_LDy;
+    QSpinBox* m_pDy;
+    QPushButton* m_ser;
     QVector<QPushButton*> m_remove;
 
 public slots:
     void linkSerieDisplayer(serieDisplayer* sd, int num);
     void fastParamsFusion();
     void bigParamsFusion();
+    void fastParamsDamier();
+    void bigParamsDamier();
     void fastParamsSer();
     void bigParamsSet();
     void unlinkSerie(int index);

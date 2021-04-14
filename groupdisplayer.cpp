@@ -39,6 +39,21 @@ void GroupDisplayer::fusionnerSerie(){
         emit loadSerie(m_s1,2);
     }
 }
+void GroupDisplayer::damierSerie(){
+    if(m_s1->getSerie() == NULL || m_s2->getSerie() == NULL){
+        QMessageBox messageBox;
+        messageBox.critical(0,"Erreur","Veuillez importer deux séries !");
+        messageBox.setFixedSize(500,200);
+    }
+    else {
+        SerieDamier* sDm = new SerieDamier(super);
+        sDm->ajouter(m_s1->getSerie());
+        sDm->ajouter(m_s2->getSerie());
+        m_s1->linkSerie(sDm);
+        m_s1->generateImages();
+        emit loadSerie(m_s1,3);
+    }
+}
 void GroupDisplayer::addLayout(QHBoxLayout *layout){
     layout->addWidget(m_s1);
     layout->addWidget(m_s2);

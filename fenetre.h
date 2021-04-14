@@ -22,6 +22,7 @@
 #include "series.h"
 #include "seriedisplayer.h"
 #include "seriefusion.h"
+#include "seriedamier.h"
 #include "groupdisplayer.h"
 #include "viewcontroler.h"
 class Fenetre : public QWidget
@@ -42,6 +43,7 @@ private:
     QSlider* m_slider;
     QPushButton* m_ajoutSerie;
     QPushButton* m_fusionSerie;
+    QPushButton* m_damierSerie;
     serieDisplayer* m_sd;
     SerieFusion* m_fusion;
     void resizeEvent(QResizeEvent* event);

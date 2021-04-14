@@ -6,6 +6,7 @@
 #include <QHBoxLayout>
 #include "seriedisplayer.h"
 #include "seriefusion.h"
+#include "seriedamier.h"
 #include <QMessageBox>
 class GroupDisplayer : public QFrame
 {
@@ -23,6 +24,7 @@ public slots:
     void afficherSerie(Series* sr);
     void fusionnerSerie();
     void unloadSerie(int index);
+    void damierSerie();
 signals:
     void loadSerie(serieDisplayer*,int);
 };
