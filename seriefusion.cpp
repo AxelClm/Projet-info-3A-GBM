@@ -6,6 +6,12 @@ SerieFusion::SerieFusion(QWidget* parent) : Series(parent)
     m_s1 = NULL;
     m_s2 = NULL;
     m_ratio = 0.5;
+    m_pt1 = 85;
+    m_pt2 = 170;
+    m_synchro = NULL;
+}
+SerieFusion::~SerieFusion(){
+    delete m_synchro; // On ne supprime pas les autres pointeurs car les adresses serviront tj
 }
 void SerieFusion::ajouter(Series* s){
     if(m_s1 == NULL){
@@ -15,16 +21,19 @@ void SerieFusion::ajouter(Series* s){
         m_s2 =s;
     }
 }
+
 QImage* SerieFusion::fastRender(int index){
-    QVector<QImage*> res = rescale(m_s1->getIndex(index),m_s2->getIndex(index),m_s1->getIdI(index)->getX(),
-            m_s1->getIdI(index)->getY(),m_s1->getIdI(index)->getXPix(),m_s1->getIdI(index)->getYPix(),
-            m_s2->getIdI(index)->getX(),m_s2->getIdI(index)->getY(),m_s2->getIdI(index)->getXPix(),
-            m_s2->getIdI(index)->getYPix());
+    if(m_synchro == NULL){
+        m_synchro = new synchro(m_s1,m_s2);
+    }
+    int* tab = m_synchro->getIndex(index);
+    QVector<QImage*> res = rescale(m_s1->getIndex(tab[0]),m_s2->getIndex(tab[1]),m_s1->getIdI(tab[0])->getX(),
+            m_s1->getIdI(tab[0])->getY(),m_s1->getIdI(tab[0])->getXPix(),m_s1->getIdI(tab[0])->getYPix(),
+            m_s2->getIdI(tab[1])->getX(),m_s2->getIdI(tab[1])->getY(),m_s2->getIdI(tab[1])->getXPix(),
+            m_s2->getIdI(tab[1])->getYPix());
     return fusion(res.at(0),res.at(1));
 }
 QImage* SerieFusion::fusion(QImage*a,QImage*b){
-    int pt1 = 85;
-    int pt2 = 170;
     QImage* c = new QImage(a->width(),a->height(),QImage::Format_RGB16);
     for(int y = 0 ; y<a->height() ; y++){
         for(int x=0;x<a->width();x++){
@@ -33,8 +42,8 @@ QImage* SerieFusion::fusion(QImage*a,QImage*b){
             int moy = -pixb.black() + 255;
             int moy2 = -pixa.black() +255;
             QColor color;
-            if(moy<pt1){
-               int tmp = moy2*m_ratio +moy*(1-m_ratio)*(255/pt1);
+            if(moy<m_pt1){
+               int tmp = moy2*m_ratio +moy*(1-m_ratio)*(255/m_pt1);
                color.setGreen(moy2*m_ratio);
                color.setBlue(moy2*m_ratio);
                if(tmp > 255){
@@ -45,9 +54,9 @@ QImage* SerieFusion::fusion(QImage*a,QImage*b){
                }
                c->setPixelColor(x,y,color);
             }
-            else if(moy<pt2){
-                int tmp = moy2*m_ratio +(moy*(255/(pt2-pt1))-(255/(pt2-pt1))*pt1)*(1-m_ratio);
-                color.setRed(255);
+            else if(moy<m_pt2){
+                int tmp = moy2*m_ratio +(moy*(255/(m_pt2-m_pt1))-(255/(m_pt2-m_pt1))*m_pt1)*(1-m_ratio);
+                color.setRed(moy2*m_ratio+127*(1-m_ratio));
                 color.setBlue(moy2*m_ratio);
                 if(tmp > 255){
                     color.setGreen(255);
@@ -57,10 +66,10 @@ QImage* SerieFusion::fusion(QImage*a,QImage*b){
                 }
                 c->setPixelColor(x,y,color);
             }
-            else if (moy>pt2){
-                int tmp = moy2*m_ratio +(moy*(255/(255-pt2))-(255/(255-pt2))*pt2)*(1-m_ratio);
-                color.setRed(255);
-                color.setBlue(255);
+            else if (moy>m_pt2){
+                int tmp = moy2*m_ratio +(moy*(255/(255-m_pt2))-(255/(255-m_pt2))*m_pt2)*(1-m_ratio);
+                color.setRed(moy2*m_ratio+127*(1-m_ratio));
+                color.setBlue(moy2*m_ratio+127*(1-m_ratio));
                 if(tmp > 255){
                     color.setBlue(255);
                 }
@@ -219,13 +228,15 @@ QImage* SerieFusion::removeXL(QImage* a, int nbrX){
 void SerieFusion::InitialisationImages(){
     int t =1;
     m_liste = QVector<QImage*>();
-    synchro synch(m_s1,m_s2);
+    if(m_synchro == NULL){
+        m_synchro = new synchro(m_s1,m_s2);
+    }
     //qDebug()<< synch.getMax();
-    QProgressDialog progress("Fusion des Images","Annuler",0,synch.getMax(),m_parent);
+    QProgressDialog progress("Fusion des Images","Annuler",0,m_synchro->getMax(),m_parent);
     progress.setWindowModality(Qt::WindowModal);
     progress.setMinimumDuration(0);
-    for(int i=0;i<synch.getMax()-1;i++){
-       int* tab = synch.getIndex(i);
+    for(int i=0;i<m_synchro->getMax()-1;i++){
+       int* tab = m_synchro->getIndex(i);
        //qDebug() << tab[0] <<"/"<<m_s1->getMax()-1<< " " << tab[1] << "/"<<m_s2->getMax()-1;
        QVector<QImage*> res = rescale(m_s1->getIndex(tab[0]),m_s2->getIndex(tab[1]),m_s1->getIdI(tab[0])->getX(),
                m_s1->getIdI(tab[0])->getY(),m_s1->getIdI(tab[0])->getXPix(),m_s1->getIdI(tab[0])->getYPix(),
@@ -246,12 +257,24 @@ int SerieFusion::getMax(){
 QHash<QString,QString> SerieFusion::parms(){
     QHash<QString,QString> map;
     map.insert("opa",QString::number(m_ratio));
+    map.insert("pt1",QString::number(m_pt1));
+    map.insert("pt2",QString::number(m_pt2));
     return map;
 }
 void SerieFusion::Updateparams(QHash<QString, QString> params){
     QHash<QString, QString>::iterator i = params.find("opa");
     while (i != params.end() && i.key() == "opa") {
        m_ratio = i.value().toDouble();
+        ++i;
+    }
+    i = params.find("pt1");
+    while (i != params.end() && i.key() == "pt1") {
+       m_pt1 = i.value().toInt();
+        ++i;
+    }
+    i = params.find("pt2");
+    while (i != params.end() && i.key() == "pt2") {
+       m_pt2 = i.value().toInt();
         ++i;
     }
 }

@@ -11,6 +11,9 @@ dicomImage::dicomImage()
     m_Row = -1;
     m_Columns = -1;
 }
+dicomImage::~dicomImage(){
+    delete m_image;
+}
 void dicomImage::ajouterRow(QByteArray Tag, QByteArray VR, QByteArray data, QByteArray size){
     DicomRow a = DicomRow(Tag,VR,data,size);
     m_header.append(a);

@@ -44,6 +44,19 @@ Fenetre::Fenetre(){
 
 Fenetre::~Fenetre()
 {
+    delete m_tab;
+    delete m_HBLayout;
+    //delete m_FrameD; Segmentation fault
+    delete m_FrameG;
+    delete m_GD;
+    //delete m_HBMidLayout; Segmentation fault
+    //delete m_VBDroiteLayout; Segmentation fault
+    //delete m_VBGaucheLayout; Segmentation fault
+    delete m_slider;
+    delete m_ajoutSerie;
+    delete m_fusionSerie;
+    delete m_sd;
+    //delete m_fusion; Segmentation fault
 }
 void Fenetre::resizeEvent(QResizeEvent* event){
     int mGRatio = 20;

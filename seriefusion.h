@@ -7,6 +7,7 @@ class SerieFusion : public Series
 {
 public:
     SerieFusion(QWidget* parent);
+    ~SerieFusion();
     void ajouter(Series*);
     //void getCurrent();
     QImage* fastRender(int i) override;
@@ -27,6 +28,9 @@ private:
     double m_ratio;
     Series*m_s1;
     Series* m_s2;
+    int m_pt1;
+    int m_pt2;
+    synchro* m_synchro;
 
 };
 

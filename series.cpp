@@ -6,6 +6,9 @@ Series::Series(QWidget* a)
     m_generated = false;
     this->m_bruit =0;
 }
+Series::~Series(){
+    m_liste.clear(); // On part du principe que ça détruit vraiment les images;
+}
 void Series::ajouter(dicomImage* dcm){
     if(m_generated == true){
         dcm->generateImage(m_bruit);

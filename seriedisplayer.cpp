@@ -4,6 +4,9 @@ serieDisplayer::serieDisplayer(QWidget *parent) : ImageDisplayer(parent)
 {
     m_sr=NULL;
 }
+serieDisplayer::~serieDisplayer(){
+    //delete m_sr; Pas son rôle
+}
 void serieDisplayer::linkSerie(Series* serie){
     m_sr = serie;
     linkImage(m_sr->fastRender(0));

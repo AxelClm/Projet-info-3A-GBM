@@ -7,6 +7,7 @@ class DicomRow
 {
 public:
     DicomRow(QByteArray Tag,QByteArray VR,QByteArray data,QByteArray size);
+    virtual ~DicomRow();
     QByteArray getTag();
     QByteArray getVR();
     QByteArray getData();

@@ -4,6 +4,9 @@ ImageDisplayer::ImageDisplayer(QWidget *parent) : QWidget(parent)
 {
     m_image = NULL;
 }
+ImageDisplayer::~ImageDisplayer(){
+    //delete m_image; Pas son role
+}
 void ImageDisplayer::paintEvent(QPaintEvent *event){
     QPainter painter(this);
     if(m_image != NULL){

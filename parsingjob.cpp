@@ -6,7 +6,9 @@ ParsingJob::ParsingJob()
     m_i = NULL;
     m_p = NULL;
 }
+ParsingJob::~ParsingJob(){
 
+}
 void ParsingJob::linkDicomImage(dicomImage * dcm, int bruit){
     this->m_dcm = dcm;
     this->m_bruit = bruit;

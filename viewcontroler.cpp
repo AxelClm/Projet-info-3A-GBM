@@ -10,7 +10,23 @@ ViewControler::ViewControler(QWidget * parent) : QTabWidget(parent)
     this->removeTab(0);
     this->m_STab = new serieDisplayer*[3];
 }
-
+ViewControler::~ViewControler(){
+    m_Layout.clear();
+    m_Page.clear();
+    m_SliderLabel.clear();
+    m_Slider.clear();
+    m_ptsLabel1.clear();
+    m_spinB1.clear();
+    m_button1.clear();
+    delete  m_opa;
+    delete m_opaS;
+    delete m_opaB;
+    delete[] m_STab;
+    delete m_LPt1;
+    delete m_pt1;
+    delete m_LPt2;
+    delete m_pt2;
+}
 void ViewControler::createPage(QString nom,int index){
     m_Page.append(new QWidget());
     m_Layout.append(new QVBoxLayout());
@@ -43,10 +59,26 @@ void ViewControler::createPage(QString nom,int index){
         m_opaB = new QPushButton(m_Page.at(2));
         m_opaB->setText("Appliquer à toute la série");
         m_opaS->setMaximum(1000);
+        m_LPt1 = new QLabel(m_Page.at(2));
+        m_LPt1->setText("Filtre: pt1");
+        m_pt1 = new QSpinBox(m_Page.at(2));
+        m_pt1->setMaximum(255);
+        m_pt1->setMinimum(0);
+        m_LPt2 = new QLabel(m_Page.at(2));
+        m_LPt2->setText("Filtre: pt1");
+        m_pt2 = new QSpinBox(m_Page.at(2));
+        m_pt2->setMaximum(255);
+        m_pt2->setMinimum(0);
         m_Layout.at(index)->addWidget(m_opa);
         m_Layout.at(index)->addWidget(m_opaS);
+        m_Layout.at(index)->addWidget(m_LPt1);
+        m_Layout.at(index)->addWidget(m_pt1);
+        m_Layout.at(index)->addWidget(m_LPt2);
+        m_Layout.at(index)->addWidget(m_pt2);
         m_Layout.at(index)->addWidget(m_opaB);
         QObject::connect(m_opaS,SIGNAL(valueChanged(int)),this,SLOT(fastParamsFusion()));
+        QObject::connect(m_pt1,SIGNAL(valueChanged(int)),this,SLOT(fastParamsFusion()));
+        QObject::connect(m_pt2,SIGNAL(valueChanged(int)),this,SLOT(fastParamsFusion()));
         QObject::connect(m_opaB,SIGNAL(clicked()),this,SLOT(bigParamsFusion()));
     }
     this->addTab(m_Page.at(index),nom);
@@ -96,6 +128,16 @@ void ViewControler::linkSerieDisplayer(serieDisplayer* sd, int num){
               ++i;
           }
           m_opaS->setValue(val*1000);
+          i = params.find("pt1");
+          while (i != params.end() && i.key() == "pt1") {
+             m_pt1->setValue(i.value().toInt());
+              ++i;
+          }
+          i = params.find("pt2");
+          while (i != params.end() && i.key() == "pt2") {
+             m_pt2->setValue(i.value().toInt());
+              ++i;
+          }
           QObject::connect(m_Slider.at(num),SIGNAL(valueChanged(int)),sd,SLOT(changeImage(int)));
           m_STab[0] = sd;
           break;
@@ -114,6 +156,8 @@ QHash<QString,QString> ViewControler::generateParamsFusion(){
     double val = double(m_opaS->value())/1000;
     QHash<QString,QString> map;
     map.insert("opa",QString::number(val));
+    map.insert("pt1",QString::number(m_pt1->value()));
+    map.insert("pt2",QString::number(m_pt2->value()));
     return map;
 }
 void ViewControler::bigParamsFusion(){

@@ -10,6 +10,7 @@ class ImageDisplayer : public QWidget
     Q_OBJECT
 public:
     ImageDisplayer(QWidget *parent);
+    virtual ~ImageDisplayer();
     void linkImage(QImage* image);
     void changerS(int width);
 

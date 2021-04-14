@@ -12,6 +12,7 @@ class DicomReader
 {
 public:
     DicomReader();
+    virtual ~DicomReader();
     dicomImage* parseDicom(QString chemin);
 private:
     dicomImage* m_dcmimg;

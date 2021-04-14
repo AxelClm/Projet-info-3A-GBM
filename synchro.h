@@ -6,6 +6,7 @@ class synchro
 {
 public:
     synchro(Series* a,Series* b);
+    ~synchro();
     int getMax();
     int* getIndex(int i);
 private:

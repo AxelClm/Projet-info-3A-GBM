@@ -6,7 +6,11 @@ GroupDisplayer::GroupDisplayer(QWidget *parent) : QFrame(parent)
     m_s2 = new serieDisplayer(this);
     super = parent;
 }
-
+GroupDisplayer::~GroupDisplayer(){
+    delete m_s1;
+    delete m_s2;
+    //delete super; Mauvaise idée
+}
 void GroupDisplayer::afficherSerie(Series* sr){
     if(m_s1->isEmpty()){
         m_s1->linkSerie(sr);
@@ -21,12 +25,19 @@ void GroupDisplayer::afficherSerie(Series* sr){
 
 }
 void GroupDisplayer::fusionnerSerie(){
-    SerieFusion* sF = new SerieFusion(super);
-    sF->ajouter(m_s1->getSerie());
-    sF->ajouter(m_s2->getSerie());
-    m_s1->linkSerie(sF);
-    m_s1->generateImages();
-    emit loadSerie(m_s1,2);
+    if(m_s1->getSerie() == NULL || m_s2->getSerie() == NULL){
+        QMessageBox messageBox;
+        messageBox.critical(0,"Erreur","Veuillez importer deux séries !");
+        messageBox.setFixedSize(500,200);
+    }
+    else {
+        SerieFusion* sF = new SerieFusion(super);
+        sF->ajouter(m_s1->getSerie());
+        sF->ajouter(m_s2->getSerie());
+        m_s1->linkSerie(sF);
+        m_s1->generateImages();
+        emit loadSerie(m_s1,2);
+    }
 }
 void GroupDisplayer::addLayout(QHBoxLayout *layout){
     layout->addWidget(m_s1);

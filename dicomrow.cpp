@@ -6,7 +6,9 @@ DicomRow::DicomRow(QByteArray Tag, QByteArray VR, QByteArray data,QByteArray siz
     m_data = data;
     m_size = size;
 }
+DicomRow::~DicomRow(){
 
+}
 QByteArray DicomRow::getData(){
     return m_data;
 }

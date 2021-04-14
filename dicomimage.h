@@ -12,6 +12,7 @@ class dicomImage
 {
 public:
     dicomImage();
+    virtual ~dicomImage();
     void ajouterRow(QByteArray Tag, QByteArray VR,QByteArray data,QByteArray size);
     bool generateImage(int bruit);
     QImage* getImage();

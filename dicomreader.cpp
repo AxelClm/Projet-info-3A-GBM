@@ -4,6 +4,9 @@ DicomReader::DicomReader()
 {
 
 }
+DicomReader::~DicomReader(){
+    //delete m_dcmimg; pas son role;
+}
 dicomImage* DicomReader::parseDicom(QString chemin){
     m_dcmimg = new dicomImage();
     QFile fichier(chemin);

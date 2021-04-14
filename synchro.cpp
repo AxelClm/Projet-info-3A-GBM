@@ -4,7 +4,9 @@ synchro::synchro(Series* a,Series* b)
 {
     synchroniseSeries(a,b);
 }
-
+synchro::~synchro(){
+    m_liste.clear();
+}
 void synchro::synchroniseSeries(Series* a,Series* b){
     int ia = 0;
     int ib = 0;

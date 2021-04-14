@@ -15,6 +15,7 @@ class ViewControler : public QTabWidget
     Q_OBJECT
 public:
     ViewControler(QWidget* parent);
+    ~ViewControler();
     void createPage(QString nom, int index);
 private:
     QVector<QVBoxLayout*> m_Layout;
@@ -30,6 +31,10 @@ private:
     QHash<QString,QString> generateParamsFusion();
     QHash<QString,QString> generateParamsBase();
     serieDisplayer** m_STab;
+    QLabel* m_LPt1;
+    QSpinBox* m_pt1;
+    QLabel* m_LPt2;
+    QSpinBox* m_pt2;
 
 public slots:
     void linkSerieDisplayer(serieDisplayer* sd, int num);

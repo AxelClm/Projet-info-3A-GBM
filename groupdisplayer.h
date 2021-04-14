@@ -6,11 +6,13 @@
 #include <QHBoxLayout>
 #include "seriedisplayer.h"
 #include "seriefusion.h"
+#include <QMessageBox>
 class GroupDisplayer : public QFrame
 {
     Q_OBJECT
 public:
     GroupDisplayer(QWidget* parent);
+    virtual ~GroupDisplayer();
     void addLayout(QHBoxLayout* layout);
     void setW(int w);
 private:

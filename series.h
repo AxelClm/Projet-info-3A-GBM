@@ -12,6 +12,7 @@ class Series: public QObject
     Q_OBJECT
 public:
     Series(QWidget* a);
+    ~Series();
     void ajouter(dicomImage* dcm);
     virtual QImage* fastRender(int i);
     virtual void InitialisationImages();

@@ -10,6 +10,7 @@ class serieDisplayer : public ImageDisplayer
     Q_OBJECT
 public:
     explicit serieDisplayer(QWidget *parent = nullptr);
+    virtual ~serieDisplayer();
     void linkSerie(Series *);
     bool isEmpty();
     void generateImages();
