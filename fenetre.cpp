@@ -40,6 +40,7 @@ Fenetre::Fenetre(){
     QObject::connect(m_ajoutSerie,SIGNAL(clicked()),this,SLOT(ajouterSerie()));
     QObject::connect(m_fusionSerie,SIGNAL(clicked()),m_GD,SLOT(fusionnerSerie()));
     QObject::connect(m_GD,SIGNAL(loadSerie(serieDisplayer*,int)),m_tab,SLOT(linkSerieDisplayer(serieDisplayer*,int)));
+    QObject::connect(m_tab,SIGNAL(removed(int)),m_GD,SLOT(unloadSerie(int)));
 }
 
 Fenetre::~Fenetre()

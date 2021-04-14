@@ -22,6 +22,7 @@ private:
 public slots:
     void afficherSerie(Series* sr);
     void fusionnerSerie();
+    void unloadSerie(int index);
 signals:
     void loadSerie(serieDisplayer*,int);
 };

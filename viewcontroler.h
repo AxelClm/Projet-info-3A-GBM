@@ -35,6 +35,7 @@ private:
     QSpinBox* m_pt1;
     QLabel* m_LPt2;
     QSpinBox* m_pt2;
+    QVector<QPushButton*> m_remove;
 
 public slots:
     void linkSerieDisplayer(serieDisplayer* sd, int num);
@@ -42,9 +43,12 @@ public slots:
     void bigParamsFusion();
     void fastParamsSer();
     void bigParamsSet();
+    void unlinkSerie(int index);
+    void remove();
 signals:
     void fastUpdate(QHash<QString,QString>,int);
     void bigUpdate(QHash<QString,QString>);
+    void removed(int index);
 };
 
 #endif // VIEWCONTROLER_H

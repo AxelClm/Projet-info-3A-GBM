@@ -9,7 +9,10 @@ serieDisplayer::~serieDisplayer(){
 }
 void serieDisplayer::linkSerie(Series* serie){
     m_sr = serie;
-    linkImage(m_sr->fastRender(0));
+    if(m_sr != NULL){
+        linkImage(m_sr->fastRender(0));
+    }
+
 }
 void serieDisplayer::mouseReleaseEvent(QMouseEvent*){
     emit toucher(m_sr);

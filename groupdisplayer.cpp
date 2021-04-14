@@ -48,3 +48,14 @@ void GroupDisplayer::setW(int w){
     m_s2->changerS(w/2);
     update();
 }
+void GroupDisplayer::unloadSerie(int index){
+    if(index == 0){
+        m_s1->linkImage(NULL);
+        m_s1->linkSerie(NULL);
+        update();
+    }
+    else{
+        m_s2->linkImage(NULL);
+        m_s2->linkSerie(NULL);
+    }
+}

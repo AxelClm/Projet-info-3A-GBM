@@ -81,6 +81,10 @@ void ViewControler::createPage(QString nom,int index){
         QObject::connect(m_pt2,SIGNAL(valueChanged(int)),this,SLOT(fastParamsFusion()));
         QObject::connect(m_opaB,SIGNAL(clicked()),this,SLOT(bigParamsFusion()));
     }
+    m_remove.append(new QPushButton(m_Page.at(index)));
+    m_remove.at(index)->setText("Enlever Serie");
+    m_Layout.at(index)->addWidget(m_remove.at(index));
+    QObject::connect(m_remove.at(index),SIGNAL(clicked()),this,SLOT(remove()));
     this->addTab(m_Page.at(index),nom);
 
 }
@@ -144,6 +148,9 @@ void ViewControler::linkSerieDisplayer(serieDisplayer* sd, int num){
         }
     }
 }
+void ViewControler::unlinkSerie(int index){
+    removeTab(index);
+}
 void ViewControler::fastParamsFusion(){
     QObject::connect(this,SIGNAL(fastUpdate(QHash<QString,QString>,int)),m_STab[currentIndex()],SLOT(changeParam(QHash<QString,QString>,int)));
     QObject::connect(this,SIGNAL(bigUpdate(QHash<QString,QString>)),m_STab[currentIndex()],SLOT(changeParamAll(QHash<QString,QString>)));
@@ -187,4 +194,8 @@ QHash<QString,QString> ViewControler::generateParamsBase(){
     QHash<QString,QString> map;
     map.insert("bruit",QString::number(val));
     return map;
+}
+void ViewControler::remove(){
+    emit removed(this->currentIndex());
+    this->setTabVisible(this->currentIndex(),false);
 }
