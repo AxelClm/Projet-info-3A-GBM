@@ -42,7 +42,7 @@ QImage* SerieFusion::fusion(QImage*a,QImage*b){
             int moy = -pixb.black() + 255;
             int moy2 = -pixa.black() +255;
             QColor color;
-            if(moy<m_pt1){
+            if(moy<m_pt1){ // Simple fonction affines pour donner un effet Noir ->Rouge -> jaune -> blanc
                int tmp = moy2*m_ratio +moy*(1-m_ratio)*(255/m_pt1);
                color.setGreen(moy2*m_ratio);
                color.setBlue(moy2*m_ratio);
@@ -86,7 +86,7 @@ QImage* SerieFusion::fusion(QImage*a,QImage*b){
 QVector<QImage*> SerieFusion::rescale(QImage*a,QImage*b,double xa , double ya, double xas , double yas , double xb, double yb,double xbs, double ybs){
     bool achanged = false;
     bool bchanged = false;
-
+    //Meme code que pour damier
     qreal distx = qFabs(xa)-qFabs(xb);
     qreal disty = qFabs(ya)-qFabs(yb);
 
@@ -254,7 +254,8 @@ QImage* SerieFusion::getIndex(int i){
 int SerieFusion::getMax(){
     return m_liste.size();
 }
-QHash<QString,QString> SerieFusion::parms(){
+QHash<QString,QString> SerieFusion::parms(){ //Obliger de prendre cette QHash pour garder la meme structure de code
+    //Choix contestable
     QHash<QString,QString> map;
     map.insert("opa",QString::number(m_ratio));
     map.insert("pt1",QString::number(m_pt1));

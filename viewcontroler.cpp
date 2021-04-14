@@ -191,7 +191,7 @@ void ViewControler::linkSerieDisplayer(serieDisplayer* sd, int num){
 void ViewControler::unlinkSerie(int index){
     removeTab(index);
 }
-void ViewControler::fastParamsFusion(){
+void ViewControler::fastParamsFusion(){ // Bidouillage pour ne pas a avoir a refaire l'organisation de la classe
     QObject::connect(this,SIGNAL(fastUpdate(QHash<QString,QString>,int)),m_STab[currentIndex()],SLOT(changeParam(QHash<QString,QString>,int)));
     QObject::connect(this,SIGNAL(bigUpdate(QHash<QString,QString>)),m_STab[currentIndex()],SLOT(changeParamAll(QHash<QString,QString>)));
     emit fastUpdate(generateParamsFusion(),m_Slider.at(2)->value());

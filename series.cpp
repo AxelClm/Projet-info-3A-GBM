@@ -32,7 +32,7 @@ void Series::InitialisationImages(){
     QVector<ParsingJob*> pile;
     for(it = m_liste.begin();it<m_liste.end();it++){
         //It.hasNext() ne marche pas (boucle while) ???
-        ParsingJob* pJob = new ParsingJob();
+        ParsingJob* pJob = new ParsingJob(); // On met des threads pour aller plus vite
         pile.append(pJob);
         pJob->linkDicomImage(*it,m_bruit);
         pJob->linkProgress(&i,&progress,&mutex);

@@ -77,8 +77,8 @@ bool dicomImage::generateImage(int bruit){
     int nbrPix = 0;
     QBitArray tmpBit(m_BitAllocated,false);
     int a=0;
-    int maxPix = 255*m_MaxPix/qPow(2,m_BitStored);
-    while(z !=data.end()){
+    int maxPix = 255*m_MaxPix/qPow(2,m_BitStored); //Les bits utilisé peuvent être different de ceux stoqués.
+    while(z !=data.end()){ // On utilise un iterateur pour parcourir la data dans l'optique d'etre le plus rapide possible.
            for(int b = 0; b < 8; b++) {
                tmpBit.setBit( 1 * 8 + b, *z & (1 << (7 - b)) );
            }
@@ -88,7 +88,7 @@ bool dicomImage::generateImage(int bruit){
            }
            z++;
            a=0;
-           for(int i =0 ; i < m_BitStored ; i++){
+           for(int i =0 ; i < m_BitStored ; i++){ //On peut maintenant transformer les bit en int
                if(tmpBit.at(m_BitAllocated-i-1)==true){
                    a = a + qPow(2,i);
                    }
@@ -97,13 +97,14 @@ bool dicomImage::generateImage(int bruit){
 
             int intensite = 255*a/qPow(2,m_BitStored);
 
-            double coef = 255/(maxPix-bruit);
+            double coef = 255/(maxPix-bruit); //Simple fonction affine
             double corr = -coef*bruit;
             if(intensite < bruit){
                intensite = 0;
             }
             else{
-                intensite = intensite*coef+corr;
+                intensite = intensite*coef+corr; // On met notre intensité sur 255 car cela est le plus facile
+                //Pour l'integration dans QT (Par ex il ne gére pas les image de 12 bits.)
              }
              color.setBlue(intensite);
              color.setRed(intensite);
@@ -118,7 +119,7 @@ bool dicomImage::generateImage(int bruit){
 }
 QByteArray dicomImage::LireRow(QByteArray::iterator* i , int rows){
     QByteArray res;
-    for(int m = 0; m<rows; m++){
+    for(int m = 0; m<rows; m++){ // Un row = 16 bits
        res.append(**i);
         ++(*i);
     }

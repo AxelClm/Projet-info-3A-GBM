@@ -14,7 +14,7 @@ dicomImage* DicomReader::parseDicom(QString chemin){
     QByteArray content = fichier.readAll();
     QByteArray::iterator i;
     i = content.begin();
-    for(int x=0 ; x<50 ; x++){
+    for(int x=0 ; x<50 ; x++){ // On recherche l'entete
         QByteArray a;
         for(int m = 0; m<4;i++){
             a = a + *i;
@@ -30,7 +30,8 @@ dicomImage* DicomReader::parseDicom(QString chemin){
     }
     return m_dcmimg;
 }
-void DicomReader::LireTagSuivant(QByteArray::iterator* i,bool tagR){
+void DicomReader::LireTagSuivant(QByteArray::iterator* i,bool tagR){ // Le but de la fonction est de separer les TAG
+    //Pour trouver ceux qui nous importe.
     QByteArray tag;
     if(tagR == false){
          tag = LireRow(i,4);
@@ -95,7 +96,7 @@ void DicomReader::LireTagSuivant(QByteArray::iterator* i,bool tagR){
      }
 
 }
-void DicomReader::LireItemSuivantSQ(QByteArray::iterator* i){
+void DicomReader::LireItemSuivantSQ(QByteArray::iterator* i){ //Dans le cas ou il y'a une séquence
      QByteArray size = LireRow(i,4);
      //qDebug() << size;
      if(size =="\xFF\xFF\xFF\xFF"){

@@ -64,6 +64,7 @@ Fenetre::~Fenetre()
     //delete m_fusion; Segmentation fault
 }
 void Fenetre::resizeEvent(QResizeEvent* event){
+    //Pour garder toujours nos elements a la bonne taille
     int mGRatio = 20;
     int test = event->size().width()*mGRatio/100;
     if (test > 150){

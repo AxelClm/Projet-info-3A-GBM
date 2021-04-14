@@ -8,6 +8,8 @@ synchro::~synchro(){
     m_liste.clear();
 }
 void synchro::synchroniseSeries(Series* a,Series* b){
+    //On fait des paires d'images par rapport a la coupe
+    // Aurait pu etre mieux fait mais la precision est suffisante
     int ia = 0;
     int ib = 0;
     while (true) {

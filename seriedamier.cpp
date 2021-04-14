@@ -32,7 +32,7 @@ QImage* SerieDamier::fastRender(int index){
             m_s2->getIdI(tab[1])->getYPix());
     return damier(res.at(0),res.at(1));
 }
-QImage* SerieDamier::damier(QImage* a, QImage* b){
+QImage* SerieDamier::damier(QImage* a, QImage* b){ //On fait juste un cadrillage
     QImage* c = new QImage(a->width(),a->height(),QImage::Format_Grayscale16);
     for(int y = 0 ; y<a->height() ; y++){
         for(int x=0;x<a->width();x++){
@@ -62,7 +62,9 @@ QVector<QImage*> SerieDamier::rescale(QImage*a,QImage*b,double xa , double ya, d
 
     qreal distx = qFabs(xa)-qFabs(xb);
     qreal disty = qFabs(ya)-qFabs(yb);
-
+    // Le  but de la fonction est de replacer l'image dans l'espace pour ensuite
+    // supperposé les deux. On part evidemment du principe que les images sont prises dans
+    // Le même repert (C'est le cas dans mon set donc pas besoin de faire des calculs supp)
     if(distx <0){
         int nbrPix = qFabs(distx/xbs);
         b = removeX(b,nbrPix);
