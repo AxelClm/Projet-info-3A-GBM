@@ -220,7 +220,6 @@ void SerieDamier::InitialisationImages(){
        m_liste.append(damier(res.at(0),res.at(1)));
        progress.setValue(t);
        t++;
-       qDebug() <<t;
     }
 }
 QImage* SerieDamier::getIndex(int i){

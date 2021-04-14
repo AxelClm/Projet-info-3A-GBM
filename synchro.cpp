@@ -21,8 +21,8 @@ void synchro::synchroniseSeries(Series* a,Series* b){
             int* tmp = new int[2];
             tmp[0] = ia;
             tmp[1] = ib;
-            qDebug() << ia << " : " << ib;
-            qDebug() << a->getIdI(ia)->getSliceL() << " == " <<  b->getIdI(ib)->getSliceL();
+            //qDebug() << ia << " : " << ib;
+            //qDebug() << a->getIdI(ia)->getSliceL() << " == " <<  b->getIdI(ib)->getSliceL();
             m_liste.append(tmp);
             ia++;
             ib++;
@@ -31,8 +31,8 @@ void synchro::synchroniseSeries(Series* a,Series* b){
             int* tmp = new int[2];
             tmp[0] = ia;
             tmp[1] = ib;
-            qDebug() << ia << " : " << ib;
-            qDebug() << a->getIdI(ia)->getSliceL() << " > " <<  b->getIdI(ib)->getSliceL();
+            //qDebug() << ia << " : " << ib;
+            //qDebug() << a->getIdI(ia)->getSliceL() << " > " <<  b->getIdI(ib)->getSliceL();
             m_liste.append(tmp);
             ib++;
         }
@@ -40,13 +40,12 @@ void synchro::synchroniseSeries(Series* a,Series* b){
             int* tmp = new int[2];
             tmp[0] = ia;
             tmp[1] = ib;
-            qDebug() << ia << " : " << ib;
-            qDebug() << a->getIdI(ia)->getSliceL() << " < " <<  b->getIdI(ib)->getSliceL();
+            //qDebug() << ia << " : " << ib;
+            //qDebug() << a->getIdI(ia)->getSliceL() << " < " <<  b->getIdI(ib)->getSliceL();
             m_liste.append(tmp);
             ia++;
         }
     }
-    qDebug() << "fini";
 }
 int synchro::getMax(){
     return m_liste.size();

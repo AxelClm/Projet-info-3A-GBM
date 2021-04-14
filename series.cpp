@@ -42,7 +42,6 @@ void Series::InitialisationImages(){
     }
     progress.exec();
     threadPool->waitForDone();
-    qDebug() << "fini";
     m_generated = true;
 
 }
