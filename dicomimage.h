@@ -31,6 +31,7 @@ public:
     int m_BitAllocated;
     int m_BitStored;
     int m_Indeximage;
+    int m_MaxPix;
     double m_x;
     double m_y;
     double m_xPix;

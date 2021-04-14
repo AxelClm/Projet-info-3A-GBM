@@ -61,6 +61,11 @@ void dicomImage::ajouterRow(QByteArray Tag, QByteArray VR, QByteArray data, QByt
         //qDebug() <<"xP =" <<m_xPix;
         //qDebug() <<"yP =" <<m_yPix;
     }
+    else if (Tag.toHex() == "28000701"){
+        bool ok;
+        m_MaxPix = data.toHex().toInt(&ok,16);
+        //qDebug() << m_MaxPix;
+    }
 }
 bool dicomImage::generateImage(int bruit){
     if(m_BitAllocated == -1 || m_BitStored == -1 || m_Indeximage ==-1 || m_Row == -1 || m_Columns == -1){
@@ -72,6 +77,7 @@ bool dicomImage::generateImage(int bruit){
     int nbrPix = 0;
     QBitArray tmpBit(m_BitAllocated,false);
     int a=0;
+    int maxPix = 255*m_MaxPix/qPow(2,m_BitStored);
     while(z !=data.end()){
            for(int b = 0; b < 8; b++) {
                tmpBit.setBit( 1 * 8 + b, *z & (1 << (7 - b)) );
@@ -90,7 +96,8 @@ bool dicomImage::generateImage(int bruit){
            QColor color;
 
             int intensite = 255*a/qPow(2,m_BitStored);
-            double coef = 255/(255-bruit);
+
+            double coef = 255/(maxPix-bruit);
             double corr = -coef*bruit;
             if(intensite < bruit){
                intensite = 0;

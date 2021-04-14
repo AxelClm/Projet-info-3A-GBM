@@ -69,7 +69,7 @@ QImage* SerieFusion::fusion(QImage*a,QImage*b){
             else if (moy>m_pt2){
                 int tmp = moy2*m_ratio +(moy*(255/(255-m_pt2))-(255/(255-m_pt2))*m_pt2)*(1-m_ratio);
                 color.setRed(moy2*m_ratio+127*(1-m_ratio));
-                color.setBlue(moy2*m_ratio+127*(1-m_ratio));
+                color.setGreen(moy2*m_ratio+127*(1-m_ratio));
                 if(tmp > 255){
                     color.setBlue(255);
                 }
